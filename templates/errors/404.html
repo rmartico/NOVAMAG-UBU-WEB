@@ -1,0 +1,11 @@
+{% extends "novamag_base.html" %}
+
+{% block title %}
+    {{ super() }}
+    Sorry!! Page Not Found
+{% endblock %}
+{% block content %}
+    <h1>Sorry!!! Page Not Found</h1>
+    <h4>What you were looking for is just not there.</h4>
+    <p><a href="{{ url_for('search_result') }}">Go seach some items.</a>
+{% endblock %}

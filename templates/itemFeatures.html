@@ -1,0 +1,135 @@
+{% extends "novamag_base.html" %}
+
+{% block content %}
+    <div class="container">
+
+        <h1>Material Features: {{ item_features.name }}</h1>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">Basic</a></li>
+            <li><a data-toggle="tab" href="#chemistry">Chemistry</a></li>
+            <li><a data-toggle="tab" href="#crystal">Crystal</a></li>
+            <li><a data-toggle="tab" href="#thermodynamics">Thermodynamics</a></li>
+            <li><a data-toggle="tab" href="#magnetics">Magnetics</a></li>
+            <li><a data-toggle="tab" href="#additionalInformation">Additional Information</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+                <dl class="dl-horizontal">
+                    <dt>Type</dt>
+                    <dd>{{ transformer.transform_type(item_features.type) }}</dd>
+                    <dt>Name</dt>
+                    <dd>{{ item_features.name }}</dd>
+                    <dt>Summary</dt>
+                    <dd>{{ item_features.summary }}</dd>
+                </dl>
+            </div>
+            <div id="chemistry" class="tab-pane fade">
+                <dl class="dl-horizontal">
+                    <dt>Formula</dt>
+                    <dd>{{ item_features.formula }}</dd>
+                    <dt>Production.info</dt>
+                    <dd>{{ item_features.production_info }}</dd>
+                </dl>
+            </div>
+            <div id="crystal" class="tab-pane fade">
+                <dl class="dl-horizontal">
+                    <dt>Compound space group</dt>
+                    <dd>{{ item_features.compound_space_group }}</dd>
+                    <dt>Unit cell volume</dt>
+                    <dd>{{ transformer.unit_translate(item_features.unit_cell_volume,'Angstrom^3') }}</dd>
+                    <dt>Lattice parameters</dt>
+                    <dd>{{ transformer.unit_translate(item_features.lattice_parameters,'Angstrom') }}</dd>
+                    <dt>Lattice angles</dt>
+                    <dd>{{ transformer.unit_translate(item_features.lattice_angles,'º') }}</dd>
+                    <dt>Atomic positions</dt>
+                    <dd>{{ transformer.unit_translate(item_features.atomic_positions,'fractional coordinates') }}</dd>
+                    <dt>Crystal info</dt>
+                    <dd>{{ item_features.crystal_info }}</dd>
+                </dl>
+            </div>
+            <div id="thermodynamics" class="tab-pane fade">
+                <dl class="dl-horizontal">
+                    <dt>Unit cell energy</dt>
+                    <dd>{{ transformer.unit_translate(item_features.unit_cell_energy, 'eV') }}</dd>
+                    <dt>Unit cell formation enthalpy</dt>
+                    <dd>{{ transformer.unit_translate(item_features.unit_cell_formation_enthalpy,'eV') }}</dd>
+                    <dt>Energy info</dt>
+                    <dd>{{ item_features.energy_info }}</dd>
+                    <dt>Interatomic potentials info</dt>
+                    <dd>{{ item_features.interatomic_potentials_info }}</dd>
+                    <dt>Magnetic free energy</dt>
+                    <dd>{{ transformer.unit_translate(item_features.magnetic_free_energy, 'eV') }}</dd>
+                    <dt>Magnetic free energy info</dt>
+                    <dd>{{ item_features.magnetic_free_energy_info }}</dd>
+                </dl>
+            </div>
+            <div id="magnetics" class="tab-pane fade">
+                <dl class="dl-horizontal">
+                    <dt>Unit cell spin polarization</dt>
+                    <dd>{{ transformer.unit_translate(item_features.unit_cell_spin_polarization,'Bohr magneton') }}</dd>
+                    <dt>Atomic spin specie</dt>
+                    <dd>{{ transformer.unit_translate(item_features.atomic_spin_specie, 'Bohr magneton per atom') }}</dd>
+                    <dt>Saturation_magnetization</dt>
+                    <dd>{{ transformer.unit_translate(item_features.saturation_magnetization, 'Tesla') }}</dd>
+                    <dt>Magnetization temperature</dt>
+                    <dd>{{ transformer.unit_translate(item_features.magnetization_temperature, 'Kelvin') }}</dd>
+                    <dt>Magnetization info</dt>
+                    <dd>{{ item_features.magnetization_info }}</dd>
+                    <dt>Magnetocrystalline anisotropy energy</dt>
+                    <dd>{{ transformer.unit_translate(item_features.magnetocrystalline_anisotropy_energy,'eV') }}</dd>
+                    <dt>Anisotropy energy type</dt>
+                    <dd>{{ transformer.transform_anisotropy_energy_type(item_features.anisotropy_energy_type) }}</dd>
+                    <dt>Magnetocrystalline anisotropy constants</dt>
+                    <dd>{{ transformer.unit_translate(item_features.magnetocrystalline_anisotropy_constants,'MegaJoule/meter^3') }}</dd>
+                    <dt>Kind of anisotropy</dt>
+                    <dd>{{ transformer.transform_kind_of_anisotropy(item_features.kind_of_anisotropy) }}</dd>
+                    <dt>Anisotropy info</dt>
+                    <dd>{{ item_features.anisotropy_info }}</dd>
+                    <dt>Exchange integrals</dt>
+                    <dd>{{ transformer.unit_translate(item_features.exchange_integrals, 'miliRydberg') }}</dd>
+                    <dt>Exchange info</dt>
+                    <dd>{{ item_features.exchange_info }}</dd>
+                    <dt>Magnetic order</dt>
+                    <dd>{{ item_features.magnetic_order }}</dd>
+                    <dt>Curie temperature</dt>
+                    <dd>{{ transformer.unit_translate(item_features.curie_temperature,'Kelvin') }}</dd>
+                    <dt>Curie temperature info</dt>
+                    <dd>{{ item_features.curie_temperature_info }}</dd>
+                    <dt>Anisotropy field</dt>
+                    <dd>{{ transformer.unit_translate(item_features.anisotropy_field,'Tesla') }}</dd>
+                    <dt>Remanence</dt>
+                    <dd>{{ transformer.unit_translate(item_features.remanence,'Tesla') }}</dd>
+                    <dt>Coercivity</dt>
+                    <dd>{{ transformer.unit_translate(item_features.coercivity,'Tesla') }}</dd>
+                    <dt>Energy product</dt>
+                    <dd>{{ transformer.unit_translate(item_features.energy_product,'kiloJoule/meter^3') }}</dd>
+                    <dt>Hysteresis info</dt>
+                    <dd>{{ item_features.hysteresis_info }}</dd>
+                    <dt>Hysteresis info</dt>
+                    <dd>{{ item_features.hysteresis_info }}</dd>
+                    <dt>Domain wall width</dt>
+                    <dd>{{ transformer.unit_translate(item_features.domain_wall_width, 'nanometer') }}</dd>
+                    <dt>Domain wall info</dt>
+                    <dd>{{ item_features.domain_wall_info }}</dd>
+                    <dt>Exchange stiffness</dt>
+                    <dd>{{ transformer.unit_translate(item_features.exchange_stiffness, 'picoJoule/meter') }}</dd>
+                    <dt>Exchange stiffness info</dt>
+                    <dd>{{ item_features.exchange_stiffness_info }}</dd>
+
+
+
+
+                </dl>
+            </div>
+            <div id="additionalInformation" class="tab-pane fade">
+                <dl class="dl-horizontal">
+                    <dt>Reference</dt>
+                    <dd>{{ item_features.reference }}</dd>
+                    <dt>Comments</dt>
+                    <dd>{{ item_features.comments }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+{% endblock %}

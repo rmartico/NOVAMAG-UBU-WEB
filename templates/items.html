@@ -1,0 +1,38 @@
+{% extends "novamag_base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1>Items Result Search</h1>
+        <h4>Total records: <span class="text-muted">{{ total }}</span> Pages: <span class="text-muted">{{ pages }}</span> Current search term: <span class="text-muted">{{ search_term }}</span></h4>
+{#        <h4>Total records: <span class="text-muted">{{ total }}</span> Pages: {{ pages }} Current page: {{ current_page }}Current search term: {{ search_term }}</h4>#}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Mat.Id</th>
+                <th>Formula</th>
+                <th>Summary</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in list_item %}
+                <tr>
+                    <td><a href="/show_item_features?mafid={{ item.mafid }}">{{ item.mafid }}</a></td>
+                    <td>{{ item.formula }}</td>
+                    <td>{{ item.summary }}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+        <ul class="pagination">
+            {% for num in range(1,(pages+1)) %}
+                {% if current_page|int == num|int %}
+                    <li class="disabled"><a
+                            href="/search_paginate?search_term={{ search_term }}&page={{ num }}">{{ num }}</a></li>
+                {% else %}
+                    <li><a href="/search_paginate?search_term={{ search_term }}&page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
