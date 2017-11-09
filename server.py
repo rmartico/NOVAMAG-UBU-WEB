@@ -75,5 +75,5 @@ def show_item_features():
 
 if __name__ == '__main__':
     Bootstrap(app)
-    app.run()
-
+    #app.run(host='0.0.0.0') Acccess from other machines
+    app.run() # Acccess only from local
