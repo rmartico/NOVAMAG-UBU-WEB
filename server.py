@@ -4,10 +4,13 @@ from flask_bootstrap import Bootstrap
 from persistence import transform_basic_tables
 
 import config
+import math
+
 from persistence.database_access_object import query_items, query_item_features, query_items_with_and
 from persistence.novamag_entities_v06 import Atom, Molecule
 
 app = Flask(__name__)
+Bootstrap(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = config.SQLALCHEMY_TRACK_MODIFICATIONS
