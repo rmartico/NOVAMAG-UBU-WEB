@@ -52,7 +52,7 @@ def search_result():
         # Refactoring: move code to fun query_materials
         list_item = query_items_with_and(SessionMaker(), search_term)
         total = list_item.count()
-        return render_template('items.html', search_term=search_term, total=total, pages=math.ceil(total / PAGE_SIZE),
+        return render_template('items.html', search_term=search_term, total=total, pages=int(math.ceil(total / PAGE_SIZE)),
                                current_page=1, list_item=list_item[:PAGE_SIZE])
 
 
@@ -64,7 +64,7 @@ def paginate_result():
     total = list_item.count()
     init_record = ((int(page) - 1) * PAGE_SIZE)
     end_record = init_record + PAGE_SIZE
-    return render_template('items.html', search_term=search_term, total=total, pages=math.ceil(total / PAGE_SIZE),
+    return render_template('items.html', search_term=search_term, total=total, pages=int(math.ceil(total / PAGE_SIZE)),
                            current_page=page,
                            list_item=list_item[init_record:end_record])
 
@@ -77,6 +77,6 @@ def show_item_features():
     return render_template('itemFeatures.html', item_features=item_features, transformer=transform_basic_tables)
 
 if __name__ == '__main__':
-    Bootstrap(app)
+    #Bootstrap(app)
     #app.run(host='0.0.0.0') Acccess from other machines
     app.run() # Acccess only from local
