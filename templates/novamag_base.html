@@ -19,6 +19,9 @@
                 {#                <li><a href="#">Link</a></li>#}
                 {#                <li><a href="#">Link</a></li>#}
             </ul>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/advanced_search">Advanced Search</a></li>
+            </ul>
             <button type="button" class="btn btn-default btn-lg" onclick="window.history.back()">
                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Back
             </button>
@@ -43,7 +46,7 @@
                                 height="42" width="42">
                         <p><strong>ADMIRABLE</strong></p>
                         <p>Advanced Data MIning And (Business intelligence | Bioinformatics | Big Data) LEarning
-                        <p>&copy; <a href="http://admirable-ubu.es/home">ADMIRABLE Group</a>. 2017</p>
+                        <p>&copy; <a href="http://admirable-ubu.es/home">ADMIRABLE Group</a>. 2018</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -62,4 +65,12 @@
         <img src="{{ url_for('static', filename='images/logos/Admirable-Transparente.png') }}" alt="Admirable Logo"
              height="42" width="42">
     </div>
+
+    <!-- RMS customization of CSS -->
+    <style>
+    .form-group {
+       /* specify padding, can be changed while remaining fixed width of .outer */
+        padding: 20px;
+    }
+    </style>
 {% endblock %}

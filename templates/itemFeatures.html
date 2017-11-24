@@ -4,6 +4,7 @@
     <div class="container">
 
         <h1>Material Features: {{ item_features.name }}</h1>
+        <!--
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#home">Basic</a></li>
             <li><a data-toggle="tab" href="#chemistry">Chemistry</a></li>
@@ -11,124 +12,456 @@
             <li><a data-toggle="tab" href="#thermodynamics">Thermodynamics</a></li>
             <li><a data-toggle="tab" href="#magnetics">Magnetics</a></li>
             <li><a data-toggle="tab" href="#additionalInformation">Additional Information</a></li>
-        </ul>
+        </ul>-->
 
+        <h2>Basic</h2>
         <div class="tab-content">
-            <div id="home" class="tab-pane fade in active">
-                <dl class="dl-horizontal">
-                    <dt>Type</dt>
-                    <dd>{{ transformer.transform_type(item_features.type) }}</dd>
-                    <dt>Name</dt>
-                    <dd>{{ item_features.name }}</dd>
-                    <dt>Summary</dt>
-                    <dd>{{ item_features.summary }}</dd>
-                </dl>
+            <div id="home"> <!-- class="tab-pane fade in active">-->
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <!--
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="collapse"
+                                  data-target="#demo"></span></td>
+                        <div id="demo" class="collapse">
+                            Hidden information...
+                        </div>-->
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Information about the used approach (i.e., theory, experiment)."></span>
+                        </td>
+                        <td><strong>Type</strong></td>
+                        <td>{{ transformer.transform_type(item_features.type) }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Long descriptive identifier of the database item."></span>
+                        </td>
+                        <td><strong>Name</strong></td>
+                        <td>{{ item_features.name }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Short list of main calculated or meassured properties and production method. This is like a keyword entry."></span>
+                        </td>
+                        <td><strong>Summary</strong></td>
+                        <td>{{ item_features.summary }}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-            <div id="chemistry" class="tab-pane fade">
-                <dl class="dl-horizontal">
-                    <dt>Formula</dt>
-                    <dd>{{ item_features.formula }}</dd>
-                    <dt>Production.info</dt>
-                    <dd>{{ item_features.production_info }}</dd>
-                </dl>
-            </div>
-            <div id="crystal" class="tab-pane fade">
-                <dl class="dl-horizontal">
-                    <dt>Compound space group</dt>
-                    <dd>{{ item_features.compound_space_group }}</dd>
-                    <dt>Unit cell volume</dt>
-                    <dd>{{ transformer.unit_translate(item_features.unit_cell_volume,'Angstrom^3') }}</dd>
-                    <dt>Lattice parameters</dt>
-                    <dd>{{ transformer.unit_translate(item_features.lattice_parameters,'Angstrom') }}</dd>
-                    <dt>Lattice angles</dt>
-                    <dd>{{ transformer.unit_translate(item_features.lattice_angles,'º') }}</dd>
-                    <dt>Atomic positions</dt>
-                    <dd>{{ transformer.unit_translate(item_features.atomic_positions,'fractional coordinates') }}</dd>
-                    <dt>Crystal info</dt>
-                    <dd>{{ item_features.crystal_info }}</dd>
-                </dl>
-            </div>
-            <div id="thermodynamics" class="tab-pane fade">
-                <dl class="dl-horizontal">
-                    <dt>Unit cell energy</dt>
-                    <dd>{{ transformer.unit_translate(item_features.unit_cell_energy, 'eV') }}</dd>
-                    <dt>Unit cell formation enthalpy</dt>
-                    <dd>{{ transformer.unit_translate(item_features.unit_cell_formation_enthalpy,'eV') }}</dd>
-                    <dt>Energy info</dt>
-                    <dd>{{ item_features.energy_info }}</dd>
-                    <dt>Interatomic potentials info</dt>
-                    <dd>{{ item_features.interatomic_potentials_info }}</dd>
-                    <dt>Magnetic free energy</dt>
-                    <dd>{{ transformer.unit_translate(item_features.magnetic_free_energy, 'eV') }}</dd>
-                    <dt>Magnetic free energy info</dt>
-                    <dd>{{ item_features.magnetic_free_energy_info }}</dd>
-                </dl>
-            </div>
-            <div id="magnetics" class="tab-pane fade">
-                <dl class="dl-horizontal">
-                    <dt>Unit cell spin polarization</dt>
-                    <dd>{{ transformer.unit_translate(item_features.unit_cell_spin_polarization,'Bohr magneton') }}</dd>
-                    <dt>Atomic spin specie</dt>
-                    <dd>{{ transformer.unit_translate(item_features.atomic_spin_specie, 'Bohr magneton per atom') }}</dd>
-                    <dt>Saturation_magnetization</dt>
-                    <dd>{{ transformer.unit_translate(item_features.saturation_magnetization, 'Tesla') }}</dd>
-                    <dt>Magnetization temperature</dt>
-                    <dd>{{ transformer.unit_translate(item_features.magnetization_temperature, 'Kelvin') }}</dd>
-                    <dt>Magnetization info</dt>
-                    <dd>{{ item_features.magnetization_info }}</dd>
-                    <dt>Magnetocrystalline anisotropy energy</dt>
-                    <dd>{{ transformer.unit_translate(item_features.magnetocrystalline_anisotropy_energy,'eV') }}</dd>
-                    <dt>Anisotropy energy type</dt>
-                    <dd>{{ transformer.transform_anisotropy_energy_type(item_features.anisotropy_energy_type) }}</dd>
-                    <dt>Magnetocrystalline anisotropy constants</dt>
-                    <dd>{{ transformer.unit_translate(item_features.magnetocrystalline_anisotropy_constants,'MegaJoule/meter^3') }}</dd>
-                    <dt>Kind of anisotropy</dt>
-                    <dd>{{ transformer.transform_kind_of_anisotropy(item_features.kind_of_anisotropy) }}</dd>
-                    <dt>Anisotropy info</dt>
-                    <dd>{{ item_features.anisotropy_info }}</dd>
-                    <dt>Exchange integrals</dt>
-                    <dd>{{ transformer.unit_translate(item_features.exchange_integrals, 'miliRydberg') }}</dd>
-                    <dt>Exchange info</dt>
-                    <dd>{{ item_features.exchange_info }}</dd>
-                    <dt>Magnetic order</dt>
-                    <dd>{{ item_features.magnetic_order }}</dd>
-                    <dt>Curie temperature</dt>
-                    <dd>{{ transformer.unit_translate(item_features.curie_temperature,'Kelvin') }}</dd>
-                    <dt>Curie temperature info</dt>
-                    <dd>{{ item_features.curie_temperature_info }}</dd>
-                    <dt>Anisotropy field</dt>
-                    <dd>{{ transformer.unit_translate(item_features.anisotropy_field,'Tesla') }}</dd>
-                    <dt>Remanence</dt>
-                    <dd>{{ transformer.unit_translate(item_features.remanence,'Tesla') }}</dd>
-                    <dt>Coercivity</dt>
-                    <dd>{{ transformer.unit_translate(item_features.coercivity,'Tesla') }}</dd>
-                    <dt>Energy product</dt>
-                    <dd>{{ transformer.unit_translate(item_features.energy_product,'kiloJoule/meter^3') }}</dd>
-                    <dt>Hysteresis info</dt>
-                    <dd>{{ item_features.hysteresis_info }}</dd>
-                    <dt>Hysteresis info</dt>
-                    <dd>{{ item_features.hysteresis_info }}</dd>
-                    <dt>Domain wall width</dt>
-                    <dd>{{ transformer.unit_translate(item_features.domain_wall_width, 'nanometer') }}</dd>
-                    <dt>Domain wall info</dt>
-                    <dd>{{ item_features.domain_wall_info }}</dd>
-                    <dt>Exchange stiffness</dt>
-                    <dd>{{ transformer.unit_translate(item_features.exchange_stiffness, 'picoJoule/meter') }}</dd>
-                    <dt>Exchange stiffness info</dt>
-                    <dd>{{ item_features.exchange_stiffness_info }}</dd>
+            <h2>Chemistry</h2>
+            <div id="chemistry"> <!-- class="tab-pane fade">-->
+                <table class="table table-bordered">
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Composition description of the compound in the calculated or measured unit cell."></span>
+                        </td>
+                        <td><strong>Formula</strong></td>
+                        <td>{{ item_features.formula }}</td>
+                    </tr>
+                    <tr>
+                        <!-- auxiliary property -->
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Percentange of each atomic specie in the material."></span>
+                        </td>
+                        <td><strong>Stoichiometry</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.molecule.stechiometry, '%') }}</td>
+                    </tr>
+                    <tr>
+                        <!-- auxiliary property -->
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Species of the atoms in this material."></span>
+                        </td>
+                        <td><strong>Atomic species</strong></td>
+                        <td>{{ item_features.atomic_species }}</td>
+                    </tr>
+                    <tr>
+                        <!-- auxiliary property -->
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Number of species in the system (e.g., binary = 2, ternary = 3, etc.)"></span>
+                        </td>
+                        <td><strong>Species count</strong></td>
+                        <td>{{ item_features.species_count }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Information about how the material was made or theoretically obtained/predicted."></span>
+                        </td>
+                        <td><strong>Production.info</strong></td>
+                        <td>{{ item_features.production_info }}</td>
+                    </tr>
 
-
-
-
-                </dl>
+                </table>
             </div>
-            <div id="additionalInformation" class="tab-pane fade">
-                <dl class="dl-horizontal">
-                    <dt>Reference</dt>
-                    <dd>{{ item_features.reference }}</dd>
-                    <dt>Comments</dt>
-                    <dd>{{ item_features.comments }}</dd>
-                </dl>
+            <h2>Crystal</h2>
+            <div id="crystal"><!-- class="tab-pane fade">-->
+                <table class="table table-bordered">
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Number identifying the space group in 3d."></span>
+                        </td>
+                        <td><strong>Compound space group</strong></td>
+                        <td>{{ item_features.compound_space_group }}</td>
+                    </tr>
+                    <tr>
+                        <!-- auxiliary property -->
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Derived from space group."></span>
+                        </td>
+                        <td><strong>Lattice system</strong></td>
+                        <td>{{ item_features.lattice_system }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Volume of the unit cell."></span>
+                        </td>
+                        <td><strong>Unit cell volume</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.unit_cell_volume, transformer.angstrom) }}</td>
+                    </tr>
+                    <tr>
+                        <!-- auxiliary property -->
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Number of atoms in the unit cell."></span>
+                        </td>
+                        <td><strong>Unit cell atom count</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.unit_cell_atom_count,'Atom') }}</td>
+                    </tr>
+                    <tr>
+                        <!-- auxiliary property -->
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Unit cell volume / Unit cell atom count."></span>
+                        </td>
+                        <td><strong>Atom volume</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.atom_volume, transformer.angstrom + '/Atom') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Lattice parameters of the unit cell (a,b,c)."></span>
+                        </td>
+                        <td><strong>Lattice parameters</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.lattice_parameters, transformer.angstrom) }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Angles between lattice vectors."></span>
+                        </td>
+                        <td><strong>Lattice angles</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.lattice_angles,'º') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Atomic positions in the unit cell."></span>
+                        </td>
+                        <td><strong>Atomic positions</strong></td>
+                        <td>{{ transformer.unit_translate(transformer.transform_list(item_features.atomic_positions),'fractional coordinates') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Information about how the crystal structure was calculated or measured."></span>
+                        </td>
+                        <td><strong>Crystal info</strong></td>
+                        <td>{{ item_features.crystal_info }}</td>
+                    </tr>
+                    <tr>
+                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Uni tcell image"></span>
+                        </td>
+                        <td><strong>Unit cell image</strong></td>
+                        <td>
+                            <img src="{{ url_for('show_image', id=item_features.mafid) }}"/>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <h2>Thermodynamics</h2>
+            <div id="thermodynamics"> <!-- class="tab-pane fade">-->
+                <table class="table table-bordered">
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Total ab initio energy of the unit cell."></span>
+                        </td>
+                        <td><strong>Unit cell energy</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.unit_cell_energy, 'eV') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Formation enthalpy per unit cell."></span>
+                        </td>
+                        <td><strong>Unit cell formation enthalpy</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.unit_cell_formation_enthalpy,'eV') }}</td>
+                    </tr>
+                    <tr>
+                        <!-- auxiliary property -->
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Unit cell energy/ Unit cell atom count."></span>
+                        </td>
+                        <td><strong>Atomic energy</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.atomic_energy, 'eV/Atom') }}</td>
+                    </tr>
+                    <tr>
+                        <!-- auxiliary property -->
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Unit cell formation enthalpy / Unit cell atom count."></span>
+                        </td>
+                        <td><strong>Atomic formation enthalpy</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.atomic_formation_enthalpy, 'eV/Atom') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="I provides information about how the energy and enthalpy of formation were calculated or measured."></span>
+                        </td>
+                        <td><strong>Energy info</strong></td>
+                        <td>{{ item_features.energy_info }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Information about how the interatomic potentials were developed."></span>
+                        </td>
+                        <td><strong>Interatomic potentials info</strong></td>
+                        <td>{{ item_features.interatomic_potentials_info }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Magnetic free energy in units of eV."></span>
+                        </td>
+                        <td><strong>Magnetic free energy</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.magnetic_free_energy, 'eV') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Information about how the magnetic free energy was calculated."></span>
+                        </td>
+                        <td><strong>Magnetic free energy info</strong></td>
+                        <td>{{ item_features.magnetic_free_energy_info }}</td>
+                    </tr>
+                </table>
+            </div>
+            <h2>Magnetics</h2>
+            <div id="magnetics"> <!-- class="tab-pane fade">-->
+
+                <table class="table table-bordered">
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="The total spin polarization of the cell."></span>
+                        </td>
+                        <td><strong>Unit cell spin polarization</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.unit_cell_spin_polarization,'Bohr magneton') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Magnetization per atom of each specie."></span>
+                        </td>
+                        <td><strong>Atomic spin specie</strong></td>
+                        <td>{{ transformer.unit_translate(transformer.transform_list(item_features.atomic_spin_specie), 'Bohr magneton per atom.') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Unit cell spin polarization/unit cell volume."></span>
+                        </td>
+                        <td><strong>Saturation_magnetization</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.saturation_magnetization, 'Tesla') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Temperature at which the magnetization is calculated or measured."></span>
+                        </td>
+                        <td><strong>Magnetization temperature</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.magnetization_temperature, 'Kelvin') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Information about how the magnetization was calculated or measured."></span>
+                        </td>
+                        <td><strong>Magnetization info</strong></td>
+                        <td>{{ item_features.magnetization_info }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Energy of unit cell when magnetization is constraint in some particular directions. Format=(mx,my,mz), energy magnitude."></span>
+                        </td>
+                        <td><strong>Magnetocrystalline anisotropy energy</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.magnetocrystalline_anisotropy_energy,'eV') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Uniaxial or cubic anisotropy energy type."></span>
+                        </td>
+                        <td><strong>Anisotropy energy type</strong></td>
+                        <td>{{ transformer.transform_anisotropy_energy_type(item_features.anisotropy_energy_type) }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="The magnetocrystalline anisotropy constants value."></span>
+                        </td>
+                        <td><strong>Magnetocrystalline anisotropy constants</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.magnetocrystalline_anisotropy_constants,'MegaJoule/meter^3') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Depending on the value of the magnetocrystalline constants there are different kind of anisotropy."></span>
+                        </td>
+                        <td><strong>Kind of anisotropy</strong></td>
+                        <td>{{ transformer.transform_kind_of_anisotropy(item_features.kind_of_anisotropy) }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Information about how the magnetocrystalline anisotropy was calculated or measured."></span>
+                        </td>
+                        <td><strong>Anisotropy info</strong></td>
+                        <td>{{ item_features.anisotropy_info }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Exchange integrals, sorted by interatomic distance."></span>
+                        </td>
+                        <td><strong>Exchange integrals</strong></td>
+                        <td>{{ transformer.unit_translate(transformer.transform_list(item_features.exchange_integrals), 'miliRydberg') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Information about how exchange integrals were calculated."></span>
+                        </td>
+                        <td><strong>Exchange info</strong></td>
+                        <td>{{ item_features.exchange_info }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Type of magnetic order."></span>
+                        </td>
+                        <td><strong>Magnetic order</strong></td>
+                        <td>{{ item_features.magnetic_order }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="The Curie temperature in units of Kelvin."></span>
+                        </td>
+                        <td><strong>Curie temperature</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.curie_temperature,'Kelvin') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Information about how Curie temperature was calculated or measured."></span>
+                        </td>
+                        <td><strong>Curie temperature info</strong></td>
+                        <td>{{ item_features.curie_temperature_info }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="The anisotropy field."></span>
+                        </td>
+                        <td><strong>Anisotropy field</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.anisotropy_field,'Tesla') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Remanence"></span>
+                        </td>
+                        <td><strong>Remanence</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.remanence,'Tesla') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Coercivity."></span>
+                        </td>
+                        <td><strong>Coercivity</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.coercivity,'Tesla') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Energy product."></span>
+                        </td>
+                        <td><strong>Energy product</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.energy_product,'kiloJoule/meter^3') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Information about how hysterisis properties (anisotropy field, remanence, coercivity and energy product) were calculated or measured."></span>
+                        </td>
+                        <td><strong>Hysteresis info</strong></td>
+                        <td>{{ item_features.hysteresis_info }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="The domain wall width."></span>
+                        </td>
+                        <td><strong>Domain wall width</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.domain_wall_width, 'nanometer') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Information about how domain wall width was calculated or measured."></span>
+                        </td>
+                        <td><strong>Domain wall info</strong></td>
+                        <td>{{ item_features.domain_wall_info }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Exchange stiffness."></span>
+                        </td>
+                        <td><strong>Exchange stiffness</strong></td>
+                        <td>{{ transformer.unit_translate(item_features.exchange_stiffness, 'picoJoule/meter') }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Information about how exchange stiffness was calculated or measured."></span>
+                        </td>
+                        <td><strong>Exchange stiffness info</strong></td>
+                        <td>{{ item_features.exchange_stiffness_info }}</td>
+                    </tr>
+                </table>
+            </div>
+            <h2>Additional Information</h2>
+            <div id="additionalInformation"><!-- class="tab-pane fade">-->
+                <table class="table table-bordered">
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Publications or links where these data can be found."></span>
+                        </td>
+                        <td><strong>Reference</strong></td>
+                        <td>{{ item_features.reference }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Additional information about these data, which was not mentioned above."></span>
+                        </td>
+                        <td><strong>Comments</strong></td>
+                        <td>{{ item_features.comments }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Authors."></span>
+                        </td>
+                        <td><strong>Authors</strong></td>
+                        <td>
+                            {% for author in authors %}
+                                <p> {{ author.author }} </p>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Attached files."></span>
+                        </td>
+                        <td><strong>Attached files</strong></td>
+                        <td>
+                            {% for attached_file in attached_files %}
+                                <p><a href=" {{ transformer.parse_url(attached_file) }} "> {{ attached_file.file_name }} </a></p>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="Attached files info."></span>
+                        </td>
+                        <td><strong>Attached files info</strong></td>
+                        <td>
+                            {% for attached_file in attached_files %}
+                                <p> {{ attached_file.info }} </p>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>

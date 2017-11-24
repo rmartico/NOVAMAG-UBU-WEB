@@ -1,0 +1,88 @@
+{% extends "novamag_base.html" %}
+
+{% block content %}
+    <style>
+    .errors{
+        color: red;
+    }
+    </style>
+    <h1>NOVAMAG Advanced Search Form </h1>
+    <form action="/advanced_search_run" method="POST" class="form-inline">
+        <div class="form-group">
+            {{ form.hidden_tag() }}
+
+
+            <p>
+
+                {{ form.compound_space_group_min(class_="form-control") }}
+                <strong>&lt;</strong>
+                {{ form.compound_space_group_max.label }}
+                <strong>&lt;</strong>
+                {{ form.compound_space_group_max(class_="form-control", size="3") }}
+
+                {% if form.compound_space_group_min.errors %}
+                    <ul class="errors">{% for error in form.compound_space_group_min.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+
+                {% if form.compound_space_group_max.errors %}
+                    <ul class="errors">{% for error in form.compound_space_group_max.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+
+
+            </p>
+
+            <p>
+                {{ form.saturation_magnetization.label }}
+                <strong>&gt;</strong>
+                {{ form.saturation_magnetization(class_="form-control", size="6") }}
+                <strong>(Tesla)</strong>
+
+                {% if form.saturation_magnetization.errors %}
+                    <ul class="errors">{% for error in form.saturation_magnetization.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </p>
+
+            <p>
+                {{ form.unit_cell_formation_enthalpy.label }}
+                <strong>&lt;</strong>
+                {{ form.unit_cell_formation_enthalpy(class_="form-control", size="10") }}
+                <strong>(eV)</strong>
+
+                {% if form.unit_cell_formation_enthalpy.errors %}
+                    <ul class="errors">{% for error in form.unit_cell_formation_enthalpy.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </p>
+
+            <p>
+                {{ form.atomic_species.label }}
+                {{ form.atomic_species(class_="form-control", size="30", placeholder="atoms between & (e.g. Fe & Ni)") }}
+           </p>
+
+            <p>
+                {{ form.species_count.label }}
+                {{ form.species_count(class_="form-control", size="2") }}
+
+                {% if form.species_count.errors %}
+                    <ul class="errors">{% for error in form.species_count.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </p>
+
+            <p>
+                {{ form.stechiometry_atom.label }}
+                {{ form.stechiometry_atom(class_="form-control") }}
+                <strong>&gt;</strong>
+                {{ form.stechiometry_value.label }}
+                {{ form.stechiometry_value(class_="form-control", size="3") }}
+                <strong>(%)</strong>
+                {% if form.stechiometry_value.errors %}
+                    <ul class="errors">{% for error in form.stechiometry_value.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </p>
+
+            <p>
+            {{ form.submit(class_="btn btn-default") }}
+            </p>
+
+        </div>
+    </form>
+{% endblock %}

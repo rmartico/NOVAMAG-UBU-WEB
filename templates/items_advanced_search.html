@@ -2,8 +2,8 @@
 
 {% block content %}
     <div class="container">
-        <h1>Items Result Search</h1>
-        <h4>Total records: <span class="text-muted">{{ total }}</span> Pages: <span class="text-muted">{{ pages }}</span> Current search term: <span class="text-muted">{{ parser.replace_minus_by_ampersand(search_term) }}</span></h4>
+        <h1>Items Advanced Result Search</h1>
+        <h4>Total records: <span class="text-muted">{{ total }}</span> Pages: <span class="text-muted">{{ pages }}</span></h4>
 {#        <h4>Total records: <span class="text-muted">{{ total }}</span> Pages: {{ pages }} Current page: {{ current_page }}Current search term: {{ search_term }}</h4>#}
         <table class="table table-striped">
             <thead>
@@ -11,6 +11,10 @@
                 <th>Mat.Id</th>
                 <th>Formula</th>
                 <th>Summary</th>
+                <th>Type</th>
+                <th>Atomic formation enthalpy</th>
+                <th>Compound space group</th>
+                <th>Saturation magnetization</th>
             </tr>
             </thead>
             <tbody>
@@ -19,6 +23,10 @@
                     <td><a href="/show_item_features?mafid={{ item.mafid }}">{{ item.mafid }}</a></td>
                     <td>{{ item.formula }}</td>
                     <td>{{ item.summary }}</td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.atomic_formation_enthalpy }} (ev/Atom)</td>
+                    <td>{{ item.compound_space_group }}</td>
+                    <td>{{ item.saturation_magnetization }} (Tesla)</td>
                 </tr>
             {% endfor %}
 
@@ -28,9 +36,9 @@
             {% for num in range(1,(pages+1)) %}
                 {% if current_page|int == num|int %}
                     <li class="disabled"><a
-                            href="/search_paginate?search_term={{ search_term }}&page={{ num }}">{{ num }}</a></li>
+                            href="/advanced_search_paginate?{{ search_term }}&page={{ num }}">{{ num }}</a></li>
                 {% else %}
-                    <li><a href="/search_paginate?search_term={{ search_term }}&page={{ num }}">{{ num }}</a></li>
+                    <li><a href="/advanced_search_paginate?{{ search_term }}&page={{ num }}">{{ num }}</a></li>
                 {% endif %}
             {% endfor %}
         </ul>

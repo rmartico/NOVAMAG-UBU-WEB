@@ -10,4 +10,5 @@ else:
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-
+# For CSRF with WTF
+SECRET_KEY = 'sdflsfjlsfsdfiowfjsad37847239847239jflsjfaf28308302'

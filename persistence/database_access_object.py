@@ -1,97 +1,274 @@
-from persistence.novamag_entities_v06 import Item
+'''
+Database functions.
+'''
 
-from persistence.parser_search_query import parse_with_and
+from persistence.novamag_entities_v08 import Item, AttachedFile, Author, Atom, Molecule, Composition
+from persistence.parser_search_query import parse_with_and, replace_minus_by_ampersand
 
+# Global variables
+SessionMaker = None
+ATOMS = None
 
-def query_items_with_and(session, search_term):
+# Routines
+def set_session_maker(session_maker):
+    # type: (SessionMaker) -> None
     """
-    Queries the material features of current material that contains all the atoms.
+    Set the current global session DB maker.
 
-    :param session: database session
-    :param search_term: text with one or several atoms
-    :return: items containing ALL the atoms in the search term
-    :rtype: list of Item
+    :param session_maker: session maker
     """
+    global SessionMaker # avoid the shadowing of the global variable
+    SessionMaker = session_maker
+
+def init_atoms():
+    # type: () -> list[Atom]
+    """
+    Initialize the list of atomic symbols.
+
+    :param session_maker: session maker
+    """
+    global ATOMS # avoid the shadowing of the global variable
+    if ATOMS is None:
+        ATOMS = query_atoms().all()
+    return ATOMS
+
+def query_items_by_advanced_search(form):
+    # type: (form) -> list[Item]
+    """
+    Query the material features using the data of the form.
+
+    :param form data
+    :return: items containing ALL the filters
+    :rtype: list[Item]
+    """
+    session = SessionMaker()
     try:
-        atoms = parse_with_and(search_term)
-        #print('Lista de atoms: ', atoms)
-        query = session.query(Item)
+        query = session.query(Item).join(Molecule).join(Composition)
+        # 1
+        query = query.filter(Item.compound_space_group >= form.compound_space_group_min.data)
+        query = query.filter(Item.compound_space_group <= form.compound_space_group_max.data)
+        # 2
+        query = query.filter(Item.saturation_magnetization > form.saturation_magnetization.data)
+        # 3
+        query = query.filter(Item.unit_cell_formation_enthalpy < form.unit_cell_formation_enthalpy.data)
+        # 4
+        atoms = parse_with_and(form.atomic_species.data)
         for atom in atoms:
             query = query.filter(Item.formula.contains(atom))
-        #print(query)
-        return query
+        # 5
+        if form.species_count.data is not None:
+            query = query.filter(Item.species_count == form.species_count.data)
+        # 6
+        # composition percentage...
+        symbol = form.stechiometry_atom.data
+        percentage = form.stechiometry_value.data
+        query = query.filter(Composition.symbol == symbol)
+        query = query.filter(Composition.numb_of_occurrences > float(percentage))
+
+        # ORDER BY
+        query = query.filter(Item.confidential.is_(False)).order_by(Item.atomic_formation_enthalpy)# only public order by atomic formation enthallpy
+        return query.all()
     finally:
         session.close()
 
 
-def query_items(session, search_term):
+def query_items_by_advanced_search_with_query_string(dict):
+    # type: (dict) -> list[Item]
     """
-    Queries the material features of current material.
+    Queries the material features using the data of a dictionary in search query.
 
-    :param session: database session
+    :param dictionary form data
+    :return: items containing ALL the filters
+    :rtype: list[Item]
+    """
+    session = SessionMaker()
+    try:
+        print('Analyzing query string')
+        print(dict)
+        # TODO duplicated code (see query_items_by_advanced_search)
+        #query = session.query(Item)
+        query = session.query(Item).join(Molecule).join(Composition)
+        # 1
+        query = query.filter(Item.compound_space_group >= dict['compound_space_group_min'])
+        query = query.filter(Item.compound_space_group <= dict['compound_space_group_max'])
+        # 2
+        query = query.filter(Item.saturation_magnetization > dict['saturation_magnetization'])
+        # 3
+        query = query.filter(Item.unit_cell_formation_enthalpy < dict['unit_cell_formation_enthalpy'])
+        # 4
+        text_atoms = replace_minus_by_ampersand(dict['atomic_species'])
+        atoms = parse_with_and(text_atoms)
+        for atom in atoms:
+            query = query.filter(Item.formula.contains(atom))
+        # 5
+        if dict['species_count'] is not None:
+            query = query.filter(Item.species_count == dict['species_count'])
+        # 6
+        # composition percentage...
+        symbol = dict['stechiometry_atom']
+        percentage = dict['stechiometry_value']
+        print('Symbol is ' + symbol)
+        print('Percentage is ' + percentage)
+        query = query.filter(Composition.symbol == symbol)
+        query = query.filter(Composition.numb_of_occurrences > float(percentage))
+
+        query = query.filter(Item.confidential.is_(False)).order_by(Item.atomic_formation_enthalpy)# only public order by atomic formation enthallpy
+        print(query)
+        return query.all()
+    finally:
+        session.close()
+
+
+def restore_unitcell_jpg(mafid):
+    # type: (str) -> blob
+    """
+    Restore image for the current item.
+
+    :param mafid: item mafid
+    :return: image
+    :rtype: blob
+    """
+    session = SessionMaker()
+    query = session.query(AttachedFile).filter(AttachedFile.mafid == mafid).filter(AttachedFile.file_name.like('%.png'))
+    binary_large = None
+    if query.count() > 0:
+        binary_large = query[0].blob_content
+    return binary_large
+
+def restore_image(mafid, file_name):
+    # type: (str, str) -> blob
+    """
+    Restore image for the current item.
+
+    :param mafid: item mafid
+    :return: image
+    :rtype: blob
+    """
+    session = SessionMaker()
+    query = session.query(AttachedFile).filter(AttachedFile.mafid == mafid).filter(AttachedFile.file_name == file_name)
+    binary_large = query[0].blob_content
+    return binary_large
+
+def query_attached_files_of_item( mafid):
+    """
+    Query the attached files of current item.
+
+    :param search_term_mafid: item mafid
+    :return: attached files
+    :rtype: list of AttachedFile
+    """
+    session = SessionMaker()
+    try:
+        query = session.query(AttachedFile).filter(AttachedFile.mafid==mafid)
+        return query
+    finally:
+        session.close()
+
+def query_authors_of_item(mafid):
+    # type: (str) -> list[Author]
+    """
+    Query the attached files of current item.
+
+    :param search_term_mafid: item mafid
+    :return: authors
+    :rtype: list[Author]
+    """
+    session = SessionMaker()
+    try:
+        query = session.query(Author).join((Author, Item.authors)).filter(Item.mafid==mafid)
+        return query
+    finally:
+        session.close()
+
+def quey_items_by_formula(search_term):
+    # type: (str) -> list[Item]
+    """
+    Query the material features of current material that contains the formula.
+
+    :param search_term: text with formula
+    :return: items containing the formula
+    :rtype: list[Item]
+    """
+    session = SessionMaker()
+    try:
+        query = session.query(Item).filter(Item.formula.contains(search_term)) \
+            .filter(Item.confidential.is_(False)) \
+            .order_by(Item.mafid)
+        return query.all()
+    finally:
+        session.close()
+
+
+def query_items_with_and(search_term):
+    # type: (str) -> list[Item]
+    """
+    Query the material features of current material that contains all the atoms.
+
+    :param search_term: text with one or several atoms
+    :return: items containing ALL the atoms in the search term
+    :rtype: list[Item]
+    """
+    session = SessionMaker()
+    try:
+        atoms = parse_with_and(search_term)
+        query = session.query(Item)
+        for atom in atoms:
+            query = query.filter(Item.formula.contains(atom))
+        query = query.filter(Item.confidential.is_(False)).order_by(Item.mafid)
+        return query.all()
+    finally:
+        session.close()
+
+
+def query_items(search_term):
+    # type: (str) -> list[Item]
+    """
+    Query the material features of current material.
+
     :param search_term: search term
     :return: items containing the search term
-    :rtype: list of Item
+    :rtype: list[Item]
     """
+    session = SessionMaker()
     try:
-        # atoms = parse_with_and()_
         return session.query(Item).filter(Item.formula.contains(search_term))
     finally:
         session.close()
 
 
-def query_item_features(session, mafid):
+def query_item_features(mafid):
+    # type: (str) -> Item
     """
-    Queries the material features of current material.
+    Query the material features of current material.
 
-    :param session: database session
     :param mafid: id. of material
     :return: material feature
-    :rtype: MaterialFeature
+    :rtype: Item
     """
+    session = SessionMaker()
     try:
-        list_item_features = session.query(Item).filter(Item.mafid == mafid)
+        list_item_features = session.query(Item).filter(Item.mafid == mafid).filter(Item.confidential.is_(False))
+        # if the item is confidential (someone is trying to hack that item, the list will be empty
+        # and next line raise and exception
         return list_item_features[0]
     finally:
         session.close()
 
 
-# def query_materials(session, search_term):
-#     """
-#     Query for materials containing certain atoms.
-#
-#     :param session: database session
-#     :param search_term: text to find
-#     :return: materiasl that contain the search term
-#     :rtype: list of Material
-#     """
-#     # TODO optimize queries...
-#     try:
-#         list_material = []
-#         for instance in session.query(Molecule).filter(Molecule.formula.contains(search_term)):
-#             result_material = session.query(Material).filter(Material.formula == instance.formula)
-#             for material in result_material:
-#                 list_material.append(material)
-#         return list_material
-#     finally:
-#         session.close()
+def query_atoms():
+    # type: () -> query
+    """
+    Query all the atoms.
 
-
-# def query_material_feature(session, matId):
-#     """
-#     Queries the material features of current material.
-#
-#     :param session: database session
-#     :param matId: id. of material
-#     :return: material feature
-#     :rtype: MaterialFeature
-#     """
-#     try:
-#         list_material_feature = session.query(MaterialFeature).filter(MaterialFeature.matid == matId)
-#         material_feature = list_material_feature[0]
-#         return material_feature
-#     finally:
-#         session.close()
+    :return: query
+    :rtype: query
+    """
+    session = SessionMaker()
+    try:
+        list = session.query(Atom).order_by(Atom.symbol)
+        return list
+    finally:
+        session.close()
 
 if __name__ == '__main__':
     print('Not yet implemented')

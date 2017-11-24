@@ -1,8 +1,8 @@
 # coding: utf-8
-from sqlalchemy import Boolean, CheckConstraint, Column, ForeignKey, ForeignKeyConstraint, Integer, JSON, LargeBinary, \
-    Numeric, SmallInteger, String, Table, Text, text
+from sqlalchemy import Boolean, CheckConstraint, Column, ForeignKey, ForeignKeyConstraint, Integer, JSON, LargeBinary, Numeric, SmallInteger, String, Table, Text, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -22,7 +22,7 @@ class AttachedFile(Base):
         {'schema': 'public'}
     )
 
-    mafid = Column(ForeignKey('public.items.mafid'), primary_key=True, nullable=False)
+    mafid = Column(ForeignKey('public.items.mafid', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
     file_name = Column(String(50), primary_key=True, nullable=False)
     file_type = Column(String(20), nullable=False)
     is_text = Column(Boolean, nullable=False)
@@ -31,6 +31,8 @@ class AttachedFile(Base):
 
     file_type1 = relationship('FileType')
     item = relationship('Item')
+
+
 
 
 class Composition(Base):
@@ -59,8 +61,7 @@ class FileType(Base):
 class Item(Base):
     __tablename__ = 'items'
     __table_args__ = (
-        CheckConstraint(
-            "((type = 'E'::bpchar) AND (unit_cell_energy IS NULL) AND (interatomic_potentials_info IS NULL) AND (magnetic_free_energy IS NULL) AND (magnetic_free_energy_info IS NULL) AND (unit_cell_spin_polarization IS NULL) AND (magnetocrystalline_anisotropy_energy IS NULL) AND (exchange_integrals IS NULL) AND (exchange_info IS NULL)) OR (type = 'T'::bpchar)"),
+        CheckConstraint("((type = 'E'::bpchar) AND (unit_cell_energy IS NULL) AND (interatomic_potentials_info IS NULL) AND (magnetic_free_energy IS NULL) AND (magnetic_free_energy_info IS NULL) AND (unit_cell_spin_polarization IS NULL) AND (magnetocrystalline_anisotropy_energy IS NULL) AND (exchange_integrals IS NULL) AND (exchange_info IS NULL)) OR (type = 'T'::bpchar)"),
         CheckConstraint('(anisotropy_field >= (0)::numeric) AND (anisotropy_field <= (100)::numeric)'),
         CheckConstraint('(coercivity >= (0)::numeric) AND (coercivity <= (100)::numeric)'),
         CheckConstraint('(compound_space_group >= 1) AND (compound_space_group <= 230)'),
@@ -68,39 +69,42 @@ class Item(Base):
         CheckConstraint('(domain_wall_width >= (0)::numeric) AND (domain_wall_width <= (1000)::numeric)'),
         CheckConstraint('(energy_product >= (0)::numeric) AND (energy_product <= (10000)::numeric)'),
         CheckConstraint('(exchange_stiffness >= (0)::numeric) AND (exchange_stiffness <= (1000)::numeric)'),
-        CheckConstraint(
-            "(magnetic_free_energy >= ('-100000'::integer)::numeric) AND (magnetic_free_energy <= (100000)::numeric)"),
-        CheckConstraint(
-            '(magnetization_temperature >= (0)::numeric) AND (magnetization_temperature <= (100000)::numeric)'),
+        CheckConstraint("(magnetic_free_energy >= ('-100000'::integer)::numeric) AND (magnetic_free_energy <= (100000)::numeric)"),
+        CheckConstraint('(magnetization_temperature >= (0)::numeric) AND (magnetization_temperature <= (100000)::numeric)'),
         CheckConstraint('(remanence >= (0)::numeric) AND (remanence <= (100)::numeric)'),
         CheckConstraint('(saturation_magnetization >= (0)::numeric) AND (saturation_magnetization <= (100)::numeric)'),
-        CheckConstraint(
-            "(unit_cell_energy >= ('-100000'::integer)::numeric) AND (unit_cell_energy <= (100000)::numeric)"),
-        CheckConstraint(
-            "(unit_cell_formation_enthalpy >= ('-1000'::integer)::numeric) AND (unit_cell_formation_enthalpy <= (1000)::numeric)"),
-        CheckConstraint(
-            '(unit_cell_spin_polarization >= (0)::numeric) AND (unit_cell_spin_polarization <= (10000)::numeric)'),
+        CheckConstraint("(unit_cell_energy >= ('-100000'::integer)::numeric) AND (unit_cell_energy <= (100000)::numeric)"),
+        CheckConstraint("(unit_cell_formation_enthalpy >= ('-1000'::integer)::numeric) AND (unit_cell_formation_enthalpy <= (1000)::numeric)"),
+        CheckConstraint('(unit_cell_spin_polarization >= (0)::numeric) AND (unit_cell_spin_polarization <= (10000)::numeric)'),
         CheckConstraint('(unit_cell_volume >= (0)::numeric) AND (unit_cell_volume <= (100000)::numeric)'),
-        CheckConstraint("anisotropy_energy_type = ANY (ARRAY['U'::bpchar, 'C'::bpchar])"),
+        CheckConstraint("anisotropy_energy_type = ANY (ARRAY['U'::bpchar, 'C'::bpchar, 'P'::bpchar])"),
         CheckConstraint("kind_of_anisotropy = ANY (ARRAY['A'::bpchar, 'P'::bpchar, 'C'::bpchar])"),
         CheckConstraint("type = ANY (ARRAY['E'::bpchar, 'T'::bpchar])"),
         {'schema': 'public'}
     )
 
-    mafid = Column(Integer, primary_key=True, server_default=text("nextval('public.items_mafid_seq'::regclass)"))
+    mafid = Column(Integer, primary_key=True, server_default=text("nextval('public.items_mafid_seq'::regclass)")) # RMS changed
+    confidential = Column(Boolean, server_default=text("false"))
     type = Column(String(1), nullable=False)
     name = Column(String(50), nullable=False, unique=True)
-    summary = Column(String(255))
+    summary = Column(Text)
     formula = Column(ForeignKey('public.molecules.formula'), nullable=False)
     production_info = Column(String(255))
+    atomic_species = Column(String(255))
+    species_count = Column(Integer)
     compound_space_group = Column(SmallInteger)
+    lattice_system = Column(String(4))
+    unit_cell_atom_count = Column(SmallInteger)
     unit_cell_volume = Column(Numeric(9, 4))
+    atom_volume = Column(Numeric(9, 4))
     lattice_parameters = Column(JSON)
     lattice_angles = Column(JSON)
     atomic_positions = Column(JSON)
     crystal_info = Column(Text)
     unit_cell_energy = Column(Numeric(12, 7))
+    atomic_energy = Column(Numeric(10, 7))
     unit_cell_formation_enthalpy = Column(Numeric(10, 6))
+    atomic_formation_enthalpy = Column(Numeric(11, 7))
     energy_info = Column(Text)
     interatomic_potentials_info = Column(Text)
     magnetic_free_energy = Column(Numeric(11, 6))
@@ -132,7 +136,7 @@ class Item(Base):
     reference = Column(String(255))
     comments = Column(Text)
 
-    molecule = relationship('Molecule')
+    molecule = relationship('Molecule', lazy='joined')  # RMS: Warning. To load molecule before showing stoichiometry
     magnetic_order1 = relationship('MagneticOrder')
 
 
@@ -150,13 +154,15 @@ class Molecule(Base):
     formula = Column(String(20), primary_key=True)
     stechiometry = Column(String(30), nullable=False)
 
+# RMS moved t_authoring and Author to the end of the file...
 
 t_authoring = Table(
-       'authoring', metadata,
-        Column('author', ForeignKey('public.authors.author'), primary_key=True, nullable=False),
-        Column('mafid', ForeignKey('public.items.mafid'), primary_key=True, nullable=False),
-        schema='public'
+    'authoring', metadata,
+    Column('author', ForeignKey('public.authors.author'), primary_key=True, nullable=False),
+    Column('mafid', ForeignKey('public.items.mafid', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False),
+    schema='public'
 )
+
 
 class Author(Base):
     __tablename__ = 'authors'
@@ -164,6 +170,5 @@ class Author(Base):
 
     author = Column(String(80), primary_key=True)
 
-    items = relationship('Item', secondary=t_authoring)
-
-
+    items = relationship('Item', secondary=t_authoring, backref="authors") # RMS added backref="users"
+    #users = relationship("User", secondary=user_group_association_table, backref="groups")
