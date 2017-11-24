@@ -1,3 +1,5 @@
+from __future__ import division # Avoid problems with integer division in Python 2.7
+
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
