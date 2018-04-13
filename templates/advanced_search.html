@@ -7,7 +7,7 @@
     }
     </style>
     <h1>NOVAMAG Advanced Search Form </h1>
-    <form action="/advanced_search_run" method="POST" class="form-inline">
+    <form action="{{ url_for('advanced_search_run')}}" method="POST" class="form-inline">
         <div class="form-group">
             {{ form.hidden_tag() }}
 

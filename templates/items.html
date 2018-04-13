@@ -16,7 +16,8 @@
             <tbody>
             {% for item in list_item %}
                 <tr>
-                    <td><a href="/show_item_features?mafid={{ item.mafid }}">{{ item.mafid }}</a></td>
+                    <td><a href="{{ url_for('show_item_features') }}?mafid={{ item.mafid }}">{{ item.mafid }}</a></td>
+                    <!--<td><a href="/show_item_features?mafid={{ item.mafid }}">{{ item.mafid }}</a></td>-->
                     <td>{{ item.formula }}</td>
                     <td>{{ item.summary }}</td>
                 </tr>
@@ -28,9 +29,9 @@
             {% for num in range(1,(pages+1)) %}
                 {% if current_page|int == num|int %}
                     <li class="disabled"><a
-                            href="/search_paginate?search_term={{ search_term }}&page={{ num }}">{{ num }}</a></li>
+                            href="{{ url_for('paginate_result') }}?search_term={{ search_term }}&page={{ num }}">{{ num }}</a></li>
                 {% else %}
-                    <li><a href="/search_paginate?search_term={{ search_term }}&page={{ num }}">{{ num }}</a></li>
+                    <li><a href="{{ url_for('paginate_result') }}?search_term={{ search_term }}&page={{ num }}">{{ num }}</a></li>
                 {% endif %}
             {% endfor %}
         </ul>

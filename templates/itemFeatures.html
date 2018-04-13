@@ -446,7 +446,8 @@
                         <td><strong>Attached files</strong></td>
                         <td>
                             {% for attached_file in attached_files %}
-                                <p><a href=" {{ transformer.parse_url(attached_file) }} "> {{ attached_file.file_name }} </a></p>
+                                <!--<p><a href=" {{ transformer.parse_url(attached_file) }} "> {{ attached_file.file_name }} </a></p>-->
+                                <p><a href="{{ url_for('download_image', name=transformer.parse_url(attached_file)) }}"> {{ attached_file.file_name }} </a></p>
                             {% endfor %}
                         </td>
                     </tr>

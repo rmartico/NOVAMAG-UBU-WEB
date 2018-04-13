@@ -100,6 +100,7 @@ def search_result():
                                list_item=list_item[:PAGE_SIZE], parser=parser_search_query)
 
 
+
 @app.route('/search_paginate/', methods=['POST', 'GET'])
 def paginate_result():
     """
@@ -138,8 +139,9 @@ def show_image(id):
 
 @app.route('/download/<name>')
 def download_image(name):
-    id = request.args.get('mafid')
-    file_name = request.args.get('file_name')
+    list = name.split('&')
+    id = list[0]
+    file_name = list[1]
     logo = restore_image(id, file_name)
     response = app.response_class(logo, mimetype='application/octet-stream')
     return response
@@ -230,4 +232,4 @@ def advanced_search_paginate_result():
 if __name__ == '__main__':
     #Bootstrap(app)
     #app.run(host='0.0.0.0') Acccess from other machines
-    app.run() # Acccess only from local
+    app.run(debug=True) # Acccess only from local

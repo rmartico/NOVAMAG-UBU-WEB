@@ -10,7 +10,7 @@ angstrom = u'\u00C5ngstr\u00F6m'
 Escape characters in path to download file.
 '''
 def parse_url(attached_file):
-    url = "/download/" + quote_plus(attached_file.file_name) + "?mafid=" + str(attached_file.mafid)  + "&file_name=" + quote_plus(attached_file.file_name)
+    url = str(attached_file.mafid) + "&" + attached_file.file_name
     return url
 
 '''
