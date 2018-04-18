@@ -1,6 +1,30 @@
 {% extends "novamag_base.html" %}
 
 {% block content %}
+    <!--Redefine min witdth for tooltips-->
+    <style>
+    .tooltip-inner {
+       min-width: 400px; //the minimum width
+    }
+    </style>
+   <!-- Parsing math formulas inside tooltips in Bootstrap-->
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>
+    </script>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script  type="text/javascript">
+    var popOverSettings = {
+        placement: 'bottom',
+    }
+
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip(popOverSettings);
+        $('[data-toggle="tooltip"]').on('shown.bs.tooltip', function () {
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        })
+
+    });
+    </script>
     <div class="container">
 
         <h1>Material Features: {{ item_features.name }}</h1>
@@ -186,7 +210,7 @@
                     </tr>
                     <tr>
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                                  title="Formation enthalpy per unit cell."></span>
+                                  title="Formation enthalpy per unit cell. It is calculated ad $$\Delta H_{F}(X_{a}Y_{b}...) = E(X_{a}Y_{b}...)- [a\cdot E(X) + b\cdot E(Y)+...]$$ where E(.) is the energy, a,b,... are the number of atoms of X, Y,... in the chemical formula, respectively."></span>
                         </td>
                         <td><strong>Unit cell formation enthalpy</strong></td>
                         <td>{{ transformer.unit_translate(item_features.unit_cell_formation_enthalpy,'eV') }}</td>
@@ -285,21 +309,21 @@
                     </tr>
                     <tr>
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                                  title="Uniaxial or cubic anisotropy energy type."></span>
+                                  title="Uniaxial or cubic. For uniaxial anisotropy energy type the energy reads $$E_{ani}^{u} = K_{1}sin^{2}\theta + K_{2}sin^{4}\theta$$, while for cubic $$E_{ani}^{c} = K_{1}(\alpha_{1}^{2}\alpha_{2}^{2}+\alpha_{1}^{2}\alpha_{3}^{2}+\alpha_{2}^{2}\alpha_{3}^{2}) + K_{2}(\alpha_{1}^{2}\alpha_{2}^{2}\alpha_{3}^{2})$$ where $$\theta$$ is the polar angle of magnetization and $$\alpha_{i}=\frac{M_{i}}{M_{sat}},i=x,y,z$$ are the directions cosines. $$K_{1}$$ and $$K_{2}$$ are the magnetocrystalline anisotropy constants."></span>
                         </td>
                         <td><strong>Anisotropy energy type</strong></td>
                         <td>{{ transformer.transform_anisotropy_energy_type(item_features.anisotropy_energy_type) }}</td>
                     </tr>
                     <tr>
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                                  title="The magnetocrystalline anisotropy constants value."></span>
+                                  title="$$K_{1}, K_{2}$$. An uniaxial anisotropy energy type with $$K_{1}<0$$ means a planar anisotropy, while $$K_{1}>0$$ implies an easy axis (uniaxial)."></span>
                         </td>
                         <td><strong>Magnetocrystalline anisotropy constants</strong></td>
                         <td>{{ transformer.unit_translate(item_features.magnetocrystalline_anisotropy_constants,'MegaJoule/meter^3') }}</td>
                     </tr>
                     <tr>
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                                  title="Depending on the value of the magnetocrystalline constants there are different kind of anisotropy."></span>
+                                  title="Depending on the value of the magnetocrystalline constants there are different kind of anisotropy (easy axis, easy plane, easy cone, …)."></span>
                         </td>
                         <td><strong>Kind of anisotropy</strong></td>
                         <td>{{ transformer.transform_kind_of_anisotropy(item_features.kind_of_anisotropy) }}</td>
@@ -313,7 +337,7 @@
                     </tr>
                     <tr>
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                                  title="Exchange integrals, sorted by interatomic distance."></span>
+                                  title="Sorted by interatomic distance. Exchange energy is written as $$E_{ex} = -\frac{1}{2} \sum J_{i,j}s_{i}\cdot s_{j}$$ where $$J_{i,j}$$ is the exchange integral and $$s_{i}$$ is the unit vector along the i-th atomic magnetic moment."></span>
                         </td>
                         <td><strong>Exchange integrals</strong></td>
                         <td>{{ transformer.unit_translate(transformer.transform_list(item_features.exchange_integrals), 'miliRydberg') }}</td>
