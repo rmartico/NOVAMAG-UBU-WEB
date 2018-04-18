@@ -48,9 +48,11 @@ def query_items_by_advanced_search(form):
         query = query.filter(Item.compound_space_group >= form.compound_space_group_min.data)
         query = query.filter(Item.compound_space_group <= form.compound_space_group_max.data)
         # 2
-        query = query.filter(Item.saturation_magnetization > form.saturation_magnetization.data)
+        query = query.filter(Item.saturation_magnetization >= form.saturation_magnetization_min.data)
+        query = query.filter(Item.saturation_magnetization <= form.saturation_magnetization_max.data)
         # 3
-        query = query.filter(Item.unit_cell_formation_enthalpy < form.unit_cell_formation_enthalpy.data)
+        query = query.filter(Item.unit_cell_formation_enthalpy >= form.unit_cell_formation_enthalpy_min.data)
+        query = query.filter(Item.unit_cell_formation_enthalpy <= form.unit_cell_formation_enthalpy_max.data)
         # 4
         atoms = parse_with_and(form.atomic_species.data)
         for atom in atoms:
@@ -61,9 +63,11 @@ def query_items_by_advanced_search(form):
         # 6
         # composition percentage...
         symbol = form.stechiometry_atom.data
-        percentage = form.stechiometry_value.data
+        percentage_min = form.stechiometry_value_min.data
+        percentage_max = form.stechiometry_value_max.data
         query = query.filter(Composition.symbol == symbol)
-        query = query.filter(Composition.numb_of_occurrences > float(percentage))
+        query = query.filter(Composition.numb_of_occurrences >= float(percentage_min))
+        query = query.filter(Composition.numb_of_occurrences <= float(percentage_max))
 
         # ORDER BY
         query = query.filter(Item.confidential.is_(False)).order_by(Item.atomic_formation_enthalpy)# only public order by atomic formation enthallpy
@@ -92,9 +96,11 @@ def query_items_by_advanced_search_with_query_string(dict):
         query = query.filter(Item.compound_space_group >= dict['compound_space_group_min'])
         query = query.filter(Item.compound_space_group <= dict['compound_space_group_max'])
         # 2
-        query = query.filter(Item.saturation_magnetization > dict['saturation_magnetization'])
+        query = query.filter(Item.saturation_magnetization >= dict['saturation_magnetization_min'])
+        query = query.filter(Item.saturation_magnetization <= dict['saturation_magnetization_max'])
         # 3
-        query = query.filter(Item.unit_cell_formation_enthalpy < dict['unit_cell_formation_enthalpy'])
+        query = query.filter(Item.unit_cell_formation_enthalpy >= dict['unit_cell_formation_enthalpy_min'])
+        query = query.filter(Item.unit_cell_formation_enthalpy <= dict['unit_cell_formation_enthalpy_max'])
         # 4
         text_atoms = replace_minus_by_ampersand(dict['atomic_species'])
         atoms = parse_with_and(text_atoms)
@@ -106,11 +112,13 @@ def query_items_by_advanced_search_with_query_string(dict):
         # 6
         # composition percentage...
         symbol = dict['stechiometry_atom']
-        percentage = dict['stechiometry_value']
+        percentage_min = dict['stechiometry_value_min']
+        percentage_max = dict['stechiometry_value_max']
         print('Symbol is ' + symbol)
-        print('Percentage is ' + percentage)
+        print('Percentage is ' + percentage_min)
         query = query.filter(Composition.symbol == symbol)
-        query = query.filter(Composition.numb_of_occurrences > float(percentage))
+        query = query.filter(Composition.numb_of_occurrences >= float(percentage_min))
+        query = query.filter(Composition.numb_of_occurrences <= float(percentage_max))
 
         query = query.filter(Item.confidential.is_(False)).order_by(Item.atomic_formation_enthalpy)# only public order by atomic formation enthallpy
         print(query)

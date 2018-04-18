@@ -15,9 +15,9 @@
             <p>
 
                 {{ form.compound_space_group_min(class_="form-control") }}
-                <strong>&lt;</strong>
+                <strong>&lt;=</strong>
                 {{ form.compound_space_group_max.label }}
-                <strong>&lt;</strong>
+                <strong>&lt;=</strong>
                 {{ form.compound_space_group_max(class_="form-control", size="3") }}
 
                 {% if form.compound_space_group_min.errors %}
@@ -32,24 +32,36 @@
             </p>
 
             <p>
-                {{ form.saturation_magnetization.label }}
-                <strong>&gt;</strong>
-                {{ form.saturation_magnetization(class_="form-control", size="6") }}
+                {{ form.saturation_magnetization_min(class_="form-control") }}
+                <strong>&lt;=</strong>
+                {{ form.saturation_magnetization_max.label }}
+                <strong>&lt;=</strong>
+                {{ form.saturation_magnetization_max(class_="form-control", size="6") }}
                 <strong>(Tesla)</strong>
 
-                {% if form.saturation_magnetization.errors %}
-                    <ul class="errors">{% for error in form.saturation_magnetization.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% if form.saturation_magnetization_min.errors %}
+                    <ul class="errors">{% for error in form.saturation_magnetization_min.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+
+                {% if form.saturation_magnetization_max.errors %}
+                    <ul class="errors">{% for error in form.saturation_magnetization_max.errors %}<li>{{ error }}</li>{% endfor %}</ul>
                 {% endif %}
             </p>
 
             <p>
-                {{ form.unit_cell_formation_enthalpy.label }}
-                <strong>&lt;</strong>
-                {{ form.unit_cell_formation_enthalpy(class_="form-control", size="10") }}
+                {{ form.unit_cell_formation_enthalpy_min(class_="form-control") }}
+                <strong>&lt;=</strong>
+                {{ form.unit_cell_formation_enthalpy_max.label }}
+                <strong>&lt;=</strong>
+                {{ form.unit_cell_formation_enthalpy_max(class_="form-control", size="10") }}
                 <strong>(eV)</strong>
 
-                {% if form.unit_cell_formation_enthalpy.errors %}
-                    <ul class="errors">{% for error in form.unit_cell_formation_enthalpy.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% if form.unit_cell_formation_enthalpy_min.errors %}
+                    <ul class="errors">{% for error in form.unit_cell_formation_enthalpy_min.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+
+                {% if form.unit_cell_formation_enthalpy_max.errors %}
+                    <ul class="errors">{% for error in form.unit_cell_formation_enthalpy_max.errors %}<li>{{ error }}</li>{% endfor %}</ul>
                 {% endif %}
             </p>
 
@@ -68,14 +80,22 @@
             </p>
 
             <p>
+                {{ form.stechiometry_value_min(class_="form-control", size="3") }}
+                <strong>&lt;=</strong>
                 {{ form.stechiometry_atom.label }}
                 {{ form.stechiometry_atom(class_="form-control") }}
-                <strong>&gt;</strong>
-                {{ form.stechiometry_value.label }}
-                {{ form.stechiometry_value(class_="form-control", size="3") }}
+                <strong>with</strong>
+                {{ form.stechiometry_value_max.label }}
+                <strong>&lt;=</strong>
+                {{ form.stechiometry_value_max(class_="form-control", size="3") }}
                 <strong>(at.%)</strong>
-                {% if form.stechiometry_value.errors %}
-                    <ul class="errors">{% for error in form.stechiometry_value.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+
+                {% if form.stechiometry_value_min.errors %}
+                    <ul class="errors">{% for error in form.stechiometry_value_min.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+
+                {% if form.stechiometry_value_max.errors %}
+                    <ul class="errors">{% for error in form.stechiometry_value_max.errors %}<li>{{ error }}</li>{% endfor %}</ul>
                 {% endif %}
             </p>
 
