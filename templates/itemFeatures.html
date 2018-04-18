@@ -62,10 +62,10 @@
                     <tr>
                         <!-- auxiliary property -->
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                                  title="Percentange of each atomic specie in the material."></span>
+                                  title="Atomic percentange of each atomic specie in the material."></span>
                         </td>
                         <td><strong>Stoichiometry</strong></td>
-                        <td>{{ transformer.unit_translate(item_features.molecule.stechiometry, '%') }}</td>
+                        <td>{{ transformer.unit_translate(item_features.molecule.stechiometry, 'at.%') }}</td>
                     </tr>
                     <tr>
                         <!-- auxiliary property -->
@@ -87,7 +87,7 @@
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
                                   title="Information about how the material was made or theoretically obtained/predicted."></span>
                         </td>
-                        <td><strong>Production.info</strong></td>
+                        <td><strong>Production info</strong></td>
                         <td>{{ item_features.production_info }}</td>
                     </tr>
 
@@ -106,7 +106,7 @@
                     <tr>
                         <!-- auxiliary property -->
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                                  title="Derived from space group."></span>
+                                  title="Lattice system: TRIC=triclinic, MON=monoclinic, ORT=orthorhombic, TET=tetragonal, RHO=rhombohedral, HEX=hexagonal, CUB=cubic"></span>
                         </td>
                         <td><strong>Lattice system</strong></td>
                         <td>{{ item_features.lattice_system }}</td>
@@ -116,7 +116,7 @@
                                   title="Volume of the unit cell."></span>
                         </td>
                         <td><strong>Unit cell volume</strong></td>
-                        <td>{{ transformer.unit_translate(item_features.unit_cell_volume, transformer.angstrom) }}</td>
+                        <td>{{ transformer.unit_translate(item_features.unit_cell_volume, transformer.angstrom_cubic) }}</td>
                     </tr>
                     <tr>
                         <!-- auxiliary property -->
@@ -132,7 +132,7 @@
                                   title="Unit cell volume / Unit cell atom count."></span>
                         </td>
                         <td><strong>Atom volume</strong></td>
-                        <td>{{ transformer.unit_translate(item_features.atom_volume, transformer.angstrom + '/Atom') }}</td>
+                        <td>{{ transformer.unit_translate(item_features.atom_volume, transformer.angstrom_cubic + '/Atom') }}</td>
                     </tr>
                     <tr>
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
@@ -143,14 +143,14 @@
                     </tr>
                     <tr>
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                                  title="Angles between lattice vectors."></span>
+                                  title="Angles between lattice vectors (&#945;, &#946;, &#947;)."></span>
                         </td>
                         <td><strong>Lattice angles</strong></td>
                         <td>{{ transformer.unit_translate(item_features.lattice_angles,'º') }}</td>
                     </tr>
                     <tr>
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                                  title="Atomic positions in the unit cell."></span>
+                                  title="Atomic positions in the unit cell. In parenthesis it shows Wyckoff positions."></span>
                         </td>
                         <td><strong>Atomic positions</strong></td>
                         <td>{{ transformer.unit_translate(transformer.transform_list(item_features.atomic_positions),'fractional coordinates') }}</td>
@@ -164,7 +164,7 @@
                     </tr>
                     <tr>
                          <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                                  title="Uni tcell image"></span>
+                                  title="Unit cell image"></span>
                         </td>
                         <td><strong>Unit cell image</strong></td>
                         <td>
@@ -209,7 +209,7 @@
                     </tr>
                     <tr>
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                                  title="I provides information about how the energy and enthalpy of formation were calculated or measured."></span>
+                                  title="It provides information about how the energy and enthalpy of formation were calculated or measured."></span>
                         </td>
                         <td><strong>Energy info</strong></td>
                         <td>{{ item_features.energy_info }}</td>

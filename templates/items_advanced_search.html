@@ -11,7 +11,7 @@
                 <th>Mat.Id</th>
                 <th>Formula</th>
                 <th>Summary</th>
-                <th>Type</th>
+                <th>Approach</th>
                 <th>Atomic formation enthalpy</th>
                 <th>Compound space group</th>
                 <th>Saturation magnetization</th>
@@ -23,7 +23,7 @@
                     <td><a href="{{ url_for('show_item_features') }}?mafid={{ item.mafid }}">{{ item.mafid }}</a></td>
                     <td>{{ item.formula }}</td>
                     <td>{{ item.summary }}</td>
-                    <td>{{ item.type }}</td>
+                    <td>{{ transformer.transform_type(item.type) }}</td>
                     <td>{{ item.atomic_formation_enthalpy }} (ev/Atom)</td>
                     <td>{{ item.compound_space_group }}</td>
                     <td>{{ item.saturation_magnetization }} (Tesla)</td>

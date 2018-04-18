@@ -97,7 +97,7 @@ def search_result():
         search_term = replace_ampersand_by_minus(search_term)
         return render_template('items.html', search_term=search_term, total=total,
                                pages=int(math.ceil(total / PAGE_SIZE)), current_page=1,
-                               list_item=list_item[:PAGE_SIZE], parser=parser_search_query)
+                               list_item=list_item[:PAGE_SIZE], parser=parser_search_query, transformer=transform_basic_tables)
 
 
 
@@ -120,7 +120,7 @@ def paginate_result():
     search_term = replace_ampersand_by_minus(search_term)
     return render_template('items.html', search_term=search_term, total=total, pages=int(math.ceil(total / PAGE_SIZE)),
                            current_page=page,
-                           list_item=list_item[init_record:end_record], parser=parser_search_query)
+                           list_item=list_item[init_record:end_record], parser=parser_search_query, transformer=transform_basic_tables)
 
 """
 Sending images
@@ -206,7 +206,7 @@ def advanced_search_run():
 
         return render_template('items_advanced_search.html', search_term=search_query, total=total,
                                pages=int(math.ceil(total / PAGE_SIZE)), current_page=1,
-                               list_item=list_item[:PAGE_SIZE], parser=parser_search_query)
+                               list_item=list_item[:PAGE_SIZE], parser=parser_search_query, transformer=transform_basic_tables)
     else:
         print("non validate on submit")
         print(form.is_submitted(), form.validate())
@@ -227,7 +227,7 @@ def advanced_search_paginate_result():
     end_record = init_record + PAGE_SIZE
     return render_template('items_advanced_search.html', search_term=search_term, total=total, pages=int(math.ceil(total / PAGE_SIZE)),
                            current_page=page,
-                           list_item=list_item[init_record:end_record], parser=parser_search_query)
+                           list_item=list_item[init_record:end_record], parser=parser_search_query, transformer=transform_basic_tables)
 
 if __name__ == '__main__':
     #Bootstrap(app)

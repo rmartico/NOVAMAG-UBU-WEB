@@ -12,7 +12,7 @@ class AdvancedSearchForm(Form):
 
     saturation_magnetization = DecimalField("Saturation magnetization", [validators.NumberRange(min=0, max=100, message='Saturation out of range')], default=0)
 
-    unit_cell_formation_enthalpy = DecimalField("Unit cell formationn enthalpy", [validators.NumberRange(min=-1000, max=1000, message='Enthalpy out of range')], default=1000)
+    unit_cell_formation_enthalpy = DecimalField("Unit cell formation enthalpy", [validators.NumberRange(min=-1000, max=1000, message='Enthalpy out of range')], default=1000)
 
     atomic_species = StringField("Atomic species")
 

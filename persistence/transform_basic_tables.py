@@ -5,6 +5,7 @@ from urllib import quote_plus
 
 
 angstrom = u'\u00C5ngstr\u00F6m'
+angstrom_cubic = u'\u00C5ngstr\u00F6m'u'\u00B3'
 
 '''
 Escape characters in path to download file.
@@ -35,6 +36,7 @@ def transform_list(list):
 
 
 def transform_type(text):
+    # type: (str) -> str
     try:
         dict = {'T' : 'Theory', 'E' : 'Experiment'}
         return dict[text]

@@ -73,7 +73,7 @@
                 <strong>&gt;</strong>
                 {{ form.stechiometry_value.label }}
                 {{ form.stechiometry_value(class_="form-control", size="3") }}
-                <strong>(%)</strong>
+                <strong>(at.%)</strong>
                 {% if form.stechiometry_value.errors %}
                     <ul class="errors">{% for error in form.stechiometry_value.errors %}<li>{{ error }}</li>{% endfor %}</ul>
                 {% endif %}
