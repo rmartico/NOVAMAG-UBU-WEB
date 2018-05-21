@@ -16,6 +16,9 @@
 # <http://www.gnu.org/licenses/>.
 
 # coding: utf-8
+
+# RMS Comment: this file is auotomatically generated with sqlacodegen.
+
 from sqlalchemy import Boolean, CheckConstraint, Column, ForeignKey, ForeignKeyConstraint, Integer, JSON, LargeBinary, Numeric, SmallInteger, String, Table, Text, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base

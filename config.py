@@ -21,7 +21,7 @@ import os
 
 # Change to allow the upload to Heroku with its database
 if os.environ.get('DATABASE_URL') is None:
-    SQLALCHEMY_DATABASE_URI = 'postgresql:///novamag' # Ojo tengo distintos nombres de base de datos en los equipos.. #TODO
+    SQLALCHEMY_DATABASE_URI = 'postgresql:///novamag' # WARNING differnet names between machines #TODO
 else:
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 

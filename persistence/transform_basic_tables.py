@@ -24,17 +24,31 @@ from urllib import quote_plus
 angstrom = u'\u00C5ngstr\u00F6m'
 angstrom_cubic = u'\u00C5ngstr\u00F6m'u'\u00B3'
 
-'''
-Escape characters in path to download file.
-'''
+
 def parse_url(attached_file):
+    # type: (AttachedFile) -> str
+    """
+    Escape characters in path to download file.
+
+    :param attached_file: AttachedFile
+    :type attached_file: str
+    :return: parsed url
+    :rtype: str
+    """
     url = str(attached_file.mafid) + "&" + attached_file.file_name
     return url
 
-'''
-Parse list to string without u character
-'''
+
 def transform_list(list):
+    # type: (list[str]) -> str
+    """
+    Parse list to string without 'u' character at the beginning of the text.
+
+    :param list: list
+    :type list: list[str]
+    :return: string wihtout u character at the beginning of each name
+    :rtype: str
+    """
     text = None
     if list is not None:
         text = '['
@@ -42,7 +56,7 @@ def transform_list(list):
             if (type(item) is str):
                 text += str(item)
                 text += ' , '
-            else:
+            else: # TODO duplicate else code....
                 text += str(item)
                 text += ' , '
         if len(list) > 0:
@@ -50,10 +64,16 @@ def transform_list(list):
         text += ']'
     return text
 
-
-
 def transform_type(text):
     # type: (str) -> str
+    """
+    Translate a letter experiment to its complete type name.
+
+    :param text: str
+    :type text: str
+    :return: long text
+    :rtype: str
+    """
     try:
         dict = {'T' : 'Theory', 'E' : 'Experiment'}
         return dict[text]
@@ -61,6 +81,15 @@ def transform_type(text):
         return result_uknown()
 
 def transform_anisotropy_energy_type(text):
+    # type: (str) -> str
+    """
+    Translate the anisotropy energy letter to its complete type name.
+
+    :param text: str
+    :type text: str
+    :return: long text
+    :rtype: str
+    """
     try:
         dict = { 'U' : 'Uniaxial', 'C': 'Cubic', 'P' : 'Planar'}
         return dict[text]
@@ -68,6 +97,15 @@ def transform_anisotropy_energy_type(text):
         return result_uknown()
 
 def transform_kind_of_anisotropy(text):
+    # type: (str) -> str
+    """
+    Translate the kind of anisotropy letter to its complete type name.
+
+    :param text: str
+    :type text: str
+    :return: long text
+    :rtype: str
+    """
     try:
         dict = {'A': 'Easy axis', 'P': 'Planar easy axis', 'C': 'Easy cone'}
         return dict[text]
@@ -75,9 +113,27 @@ def transform_kind_of_anisotropy(text):
         return result_uknown()
 
 def result_uknown():
+    # type: () -> str
+    """
+    Translate to the default text 'None'.
+
+    :return: 'None' text
+    :rtype: str
+    """
     return 'None'
 
 def unit_translate(value, unit):
+    #type: (objetct,str) -> str
+    """
+    Adds the unit to the value
+
+    :param value: value
+    :type value: object
+    :param unit: unit
+    :type unit: str
+    :return: concatenated text
+    :rtype: str
+    """
     if value == None:
         return 'None'
     else:

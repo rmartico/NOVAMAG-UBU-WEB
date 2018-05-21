@@ -139,13 +139,14 @@ def paginate_result():
                            current_page=page,
                            list_item=list_item[init_record:end_record], parser=parser_search_query, transformer=transform_basic_tables)
 
-"""
-Sending images
-"""
 
 
 @app.route('/loadimage/<int:id>')
 def show_image(id):
+    #type: (int) -> image
+    """
+    Sending images.
+    """
     logo = restore_unitcell_jpg(id)
     if logo is not None:
         return app.response_class(logo, mimetype='application/octet-stream')
@@ -156,6 +157,14 @@ def show_image(id):
 
 @app.route('/download/<name>')
 def download_image(name):
+    """
+    Downloads the file image from database.
+
+    :param name: image name
+    :type name: str
+    :return: file image
+    :rtype: blob
+    """
     list = name.split('&')
     id = list[0]
     file_name = list[1]
@@ -163,9 +172,9 @@ def download_image(name):
     response = app.response_class(logo, mimetype='application/octet-stream')
     return response
 
-""""
-Advanced searc
-"""
+
+# Advanced search
+
 import traceback
 
 @app.route('/show_item_features', methods=['GET'])
@@ -176,13 +185,9 @@ def show_item_features():
     try:
         mafid = request.args.get('mafid')
         # Refactoring: move code to fun query_material_features
-        print("Mafid "+  mafid)
         item_features = query_item_features(mafid)
-        print("1")
         attached_files = query_attached_files_of_item(mafid)
-        print("2")
         authors = query_authors_of_item(mafid)
-        print("3")
         return render_template('itemFeatures.html', item_features=item_features, attached_files=attached_files,
                            authors=authors, transformer=transform_basic_tables)
     except:

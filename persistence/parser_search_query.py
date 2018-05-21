@@ -18,13 +18,14 @@
 import re
 
 def parse_dict_to_query_string(dict):
+    # type: (dict) -> str
     """
     Parses dict with query string to string
 
     :param dict: dictionary
-    :type: dict
-    :return: params as quey string
-    :rtype: string
+    :type dict: dict
+    :return: params as quey string with parameters
+    :rtype: str
     """
     return \
         "compound_space_group_min=" + str(dict["compound_space_group_min"]) + \
@@ -45,9 +46,9 @@ def parse_form_to_query_search(form):
     Parses the text query search giving the list with ampersand characters betweeen parameters.
 
     :param form: form with advanced search
-    :type: AdvancedSearchForm
+    :type form: AdvancedSearchForm
     :return: params as quey string
-    :rtype: list of strings
+    :rtype: str
     """
     csg_mind = form.compound_space_group_min.data
     csg_maxd = form.compound_space_group_max.data
@@ -67,13 +68,14 @@ def parse_form_to_query_search(form):
 
 
 def parse_with_and(text):
-    # type: (str) -> List
+    # type: (str) -> list[str]
     """
     Parses the text query search giving the list between & character.
 
     :param text: text with search query
+    :type text: str
     :return: atom list
-    :rtype: list of strings
+    :rtype: list[str]
     """
     # first convert to lower and then capitalize
     text = correct_captitalized_letters(text)
@@ -88,6 +90,7 @@ def correct_captitalized_letters(text):
     Corrects capital letters at the beginning of the atom.
 
     :param text: text with search query
+    :type text: str
     :return: text with capitalized atoms
     :rtype: string
     """
@@ -100,6 +103,7 @@ def contains_ampersand(text):
     Searchs for an ampersand.
 
     :param text: text with search query
+    :type text: str
     :return: True if contains any ampersand
     :rtype: bool
     """
@@ -113,7 +117,9 @@ def replace_ampersand_by_minus(text):
     Note: problems parsing the query string, we need to replace the symbol inside a parameter.
 
     :param text: query search
+    :type text: str
     :return: query search
+    :rtype: str
     """
     return text.replace('&', '-')
 
@@ -124,7 +130,9 @@ def replace_minus_by_ampersand(text):
     Note: recover the original text.
 
     :param text: text
+    :type test: str
     :return: text
+    :rtype: str
     """
     return text.replace('-', '&')
 
@@ -135,18 +143,22 @@ def clean_spaces(text):
     Clean the white symbols in the string.
 
     :param text: text
+    :type text: str
     :return: text without white symbols
+    :rtype: str
     """
     return text.replace(' ','')
 
 
 def has_only_one_atom(search_term, ATOMS_LIST):
-    # type: (str, List) -> bool
+    # type: (str, list[Atom]) -> bool
     """
     Checks if current search term contains only one atom.
 
     :param search_term: text with search query
+    :type search_term: str
     :param ATOM_LIST: constant list of atoms
+    :type ATOMS_LIST: list[Atom]
     :return: True if contains only one atom
     :rtype: bool
     """

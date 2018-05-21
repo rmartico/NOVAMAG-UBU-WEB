@@ -33,6 +33,7 @@ def set_session_maker(session_maker):
     Set the current global session DB maker.
 
     :param session_maker: session maker
+    :type session_maker: SessionMaker
     """
     global SessionMaker # avoid the shadowing of the global variable
     SessionMaker = session_maker
@@ -42,7 +43,8 @@ def init_atoms():
     """
     Initialize the list of atomic symbols.
 
-    :param session_maker: session maker
+    :return: session_maker: session maker
+    :rtype: list[Atom]
     """
     global ATOMS # avoid the shadowing of the global variable
     if ATOMS is None:
@@ -55,6 +57,7 @@ def query_items_by_advanced_search(form):
     Query the material features using the data of the form.
 
     :param form data
+    :type form: form
     :return: items containing ALL the filters
     :rtype: list[Item]
     """
@@ -99,6 +102,7 @@ def query_items_by_advanced_search_with_query_string(dict):
     Queries the material features using the data of a dictionary in search query.
 
     :param dictionary form data
+    :type dict: dict
     :return: items containing ALL the filters
     :rtype: list[Item]
     """
@@ -150,6 +154,7 @@ def restore_unitcell_jpg(mafid):
     Restore image for the current item.
 
     :param mafid: item mafid
+    :param mafi: str
     :return: image
     :rtype: blob
     """
@@ -166,6 +171,7 @@ def restore_image(mafid, file_name):
     Restore image for the current item.
 
     :param mafid: item mafid
+    :type mafid: str
     :return: image
     :rtype: blob
     """
@@ -175,10 +181,12 @@ def restore_image(mafid, file_name):
     return binary_large
 
 def query_attached_files_of_item( mafid):
+    # type: (str) -> list[AttachedFile]
     """
     Query the attached files of current item.
 
-    :param search_term_mafid: item mafid
+    :param search_term_mafid: item mafid:
+    :type mafid: str
     :return: attached files
     :rtype: list of AttachedFile
     """
@@ -195,6 +203,7 @@ def query_authors_of_item(mafid):
     Query the attached files of current item.
 
     :param search_term_mafid: item mafid
+    :type mafid: str
     :return: authors
     :rtype: list[Author]
     """
@@ -211,6 +220,7 @@ def quey_items_by_formula(search_term):
     Query the material features of current material that contains the formula.
 
     :param search_term: text with formula
+    :type search_term: str
     :return: items containing the formula
     :rtype: list[Item]
     """
@@ -230,6 +240,7 @@ def query_items_with_and(search_term):
     Query the material features of current material that contains all the atoms.
 
     :param search_term: text with one or several atoms
+    :type search_term: str
     :return: items containing ALL the atoms in the search term
     :rtype: list[Item]
     """
@@ -251,6 +262,7 @@ def query_items(search_term):
     Query the material features of current material.
 
     :param search_term: search term
+    :type search_term: str
     :return: items containing the search term
     :rtype: list[Item]
     """
@@ -267,6 +279,7 @@ def query_item_features(mafid):
     Query the material features of current material.
 
     :param mafid: id. of material
+    :type mafid: str
     :return: material feature
     :rtype: Item
     """
