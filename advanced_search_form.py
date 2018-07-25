@@ -37,11 +37,11 @@ class AdvancedSearchForm(Form):
 
     species_count = IntegerField("Species count", [validators.NumberRange(min=0, max=10, message='Number out of range')], default=2)
 
-    stechiometry_value_min = DecimalField("Stoichoimetry percentage min",  [validators.NumberRange(min=0, max=1, message='Min. number out of range')], default=0)
-    stechiometry_value_max = DecimalField("Stoichoimetry percentage",  [validators.NumberRange(min=0, max=1, message='Min. number out of range')], default=1)
+    stechiometry_value_min = DecimalField("Stoichiometry percentage min",  [validators.NumberRange(min=0, max=1, message='Min. number out of range')], default=0)
+    stechiometry_value_max = DecimalField("Stoichiometry percentage",  [validators.NumberRange(min=0, max=1, message='Min. number out of range')], default=1)
 
     submit = SubmitField("Submit")
 
-    stechiometry_atom = SelectField('Stoichoimetry atom', coerce=str, choices =  [ (atom.symbol, atom.symbol) for atom in ATOMS], default='Fe')
+    stechiometry_atom = SelectField('Stoichiometry atom', coerce=str, choices =  [ (atom.symbol, atom.symbol) for atom in ATOMS], default='Fe')
 
 
