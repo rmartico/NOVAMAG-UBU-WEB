@@ -21,6 +21,8 @@ Database functions.
 
 from persistence.novamag_entities_v08 import Item, AttachedFile, Author, Atom, Molecule, Composition
 from persistence.parser_search_query import parse_with_and, replace_minus_by_ampersand
+from sqlalchemy import cast, Float
+from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION
 
 # Global variables
 SessionMaker = None
@@ -70,17 +72,28 @@ def query_items_by_advanced_search(form):
         # 2
         query = query.filter(Item.saturation_magnetization >= form.saturation_magnetization_min.data)
         query = query.filter(Item.saturation_magnetization <= form.saturation_magnetization_max.data)
-        # 3
+
+        #3 first magnetocrystalline anisotropy constants
+        apply_filter_k1 = form.apply_filter_k1.data
+
+        if apply_filter_k1: # if the user wants to apply the filter
+            print("Aplicamos el filtro en la construccion de la SQL")
+            print(type(Item.magnetocrystalline_anisotropy_constants[0]))
+            print(Item.magnetocrystalline_anisotropy_constants[0])
+            query = query.filter(Item.magnetocrystalline_anisotropy_constants[0].astext.cast(DOUBLE_PRECISION) >= form.magnetocrystalline_anisotropy_constant_k1_min.data)
+            query = query.filter(Item.magnetocrystalline_anisotropy_constants[0].astext.cast(DOUBLE_PRECISION) <= form.magnetocrystalline_anisotropy_constant_k1_max.data)
+
+        # 4
         query = query.filter(Item.unit_cell_formation_enthalpy >= form.unit_cell_formation_enthalpy_min.data)
         query = query.filter(Item.unit_cell_formation_enthalpy <= form.unit_cell_formation_enthalpy_max.data)
-        # 4
+        # 5
         atoms = parse_with_and(form.atomic_species.data)
         for atom in atoms:
             query = query.filter(Item.formula.contains(atom))
-        # 5
+        # 6
         if form.species_count.data is not None:
             query = query.filter(Item.species_count == form.species_count.data)
-        # 6
+        # 7
         # composition percentage...
         symbol = form.stechiometry_atom.data
         percentage_min = form.stechiometry_value_min.data
@@ -94,6 +107,20 @@ def query_items_by_advanced_search(form):
         return query.all()
     finally:
         session.close()
+
+
+def str_to_bool(text):
+    # type: (str) -> bool
+    '''
+    Convert a text to bool.
+
+    :param text: text
+    :return: true if the text is 'True', false in other case
+    '''
+    if text == 'True':
+         return True
+    else:
+        return False
 
 
 def query_items_by_advanced_search_with_query_string(dict):
@@ -119,18 +146,30 @@ def query_items_by_advanced_search_with_query_string(dict):
         # 2
         query = query.filter(Item.saturation_magnetization >= dict['saturation_magnetization_min'])
         query = query.filter(Item.saturation_magnetization <= dict['saturation_magnetization_max'])
+
         # 3
+        apply_filter_k1 = str_to_bool(dict['apply_filter_k1'])
+        print(apply_filter_k1)
+
+        if apply_filter_k1:  # if the user wants to apply the filter
+            print("SI SE USA")
+            #query = query.filter(Item.magnetocrystalline_anisotropy_constants[0] >= dict['magnetocrystalline_anisotropy_constant_k1_min'])
+            #query = query.filter(Item.magnetocrystalline_anisotropy_constants[0] <= dict['magnetocrystalline_anisotropy_constant_k1_max'])
+            query = query.filter(Item.magnetocrystalline_anisotropy_constants[0].astext.cast(DOUBLE_PRECISION) >= dict['magnetocrystalline_anisotropy_constant_k1_min'])
+            query = query.filter(Item.magnetocrystalline_anisotropy_constants[0].astext.cast(DOUBLE_PRECISION) <= dict['magnetocrystalline_anisotropy_constant_k1_max'])
+
+        # 4
         query = query.filter(Item.unit_cell_formation_enthalpy >= dict['unit_cell_formation_enthalpy_min'])
         query = query.filter(Item.unit_cell_formation_enthalpy <= dict['unit_cell_formation_enthalpy_max'])
-        # 4
+        # 5
         text_atoms = replace_minus_by_ampersand(dict['atomic_species'])
         atoms = parse_with_and(text_atoms)
         for atom in atoms:
             query = query.filter(Item.formula.contains(atom))
-        # 5
+        # 6
         if dict['species_count'] is not None:
             query = query.filter(Item.species_count == dict['species_count'])
-        # 6
+        # 7
         # composition percentage...
         symbol = dict['stechiometry_atom']
         percentage_min = dict['stechiometry_value_min']

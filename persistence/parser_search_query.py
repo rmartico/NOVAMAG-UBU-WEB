@@ -32,6 +32,9 @@ def parse_dict_to_query_string(dict):
         "&compound_space_group_max=" + str(dict["compound_space_group_max"]) + \
         "&saturation_magnetization_min=" + str(dict["saturation_magnetization_min"]) + \
         "&saturation_magnetization_max=" + str(dict["saturation_magnetization_max"]) + \
+        "&apply_filter_k1=" + str(dict["apply_filter_k1"]) + \
+        "&magnetocrystalline_anisotropy_constant_k1_min=" + str(dict['magnetocrystalline_anisotropy_constant_k1_min']) +\
+        "&magnetocrystalline_anisotropy_constant_k1_max=" + str(dict['magnetocrystalline_anisotropy_constant_k1_max']) + \
         "&unit_cell_formation_enthalpy_min=" + str(dict["unit_cell_formation_enthalpy_min"]) + \
         "&unit_cell_formation_enthalpy_max=" + str(dict["unit_cell_formation_enthalpy_max"]) + \
         "&atomic_species=" + dict["atomic_species"]+ \
@@ -54,6 +57,9 @@ def parse_form_to_query_search(form):
     csg_maxd = form.compound_space_group_max.data
     smd_mind = form.saturation_magnetization_min.data
     smd_maxd = form.saturation_magnetization_max.data
+    apply_filter_k1 = form.apply_filter_k1.data
+    mac_mind = form.magnetocrystalline_anisotropy_constant_k1_min.data
+    mac_maxd = form.magnetocrystalline_anisotropy_constant_k1_max.data
     ucfe_mind = form.unit_cell_formation_enthalpy_min.data
     ucfe_maxd = form.unit_cell_formation_enthalpy_max.data
     asd = form.atomic_species.data
@@ -63,6 +69,8 @@ def parse_form_to_query_search(form):
     sv_maxd = form.stechiometry_value_max.data
 
     return "compound_space_group_min=" + str(csg_mind) + "&compound_space_group_max=" + str(csg_maxd) + "&saturation_magnetization_min=" + str(smd_mind) + "&saturation_magnetization_max=" + str(smd_maxd) +\
+        "&apply_filter_k1=" + str(apply_filter_k1) +\
+        "&magnetocrystalline_anisotropy_constant_k1_min=" + str(mac_mind) + "&magnetocrystalline_anisotropy_constant_k1_max=" + str(mac_maxd) + \
         "&unit_cell_formation_enthalpy_min=" + str(ucfe_mind) + "&unit_cell_formation_enthalpy_max=" + str(ucfe_maxd) + "&atomic_species=" + replace_ampersand_by_minus(clean_spaces(asd)) + "&species_count=" + str(scd) + "&stechiometry_atom=" + str(sad) + \
         "&stechiometry_value_min=" + str(sv_mind) + "&stechiometry_value_max=" + str(sv_maxd)
 

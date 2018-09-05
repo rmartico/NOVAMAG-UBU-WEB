@@ -214,6 +214,9 @@ def advanced_search_run():
     print(form.errors)
     if form.validate_on_submit():
 
+        print("Valor de filtrado leido")
+        print(request.form.get('constantk1'))
+
         list_item = query_items_by_advanced_search(form)
         search_query = parse_form_to_query_search(form)
 

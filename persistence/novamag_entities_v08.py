@@ -19,10 +19,11 @@
 
 # RMS Comment: this file is auotomatically generated with sqlacodegen.
 
-from sqlalchemy import Boolean, CheckConstraint, Column, ForeignKey, ForeignKeyConstraint, Integer, JSON, LargeBinary, Numeric, SmallInteger, String, Table, Text, text
+from sqlalchemy import Boolean, CheckConstraint, Column, ForeignKey, ForeignKeyConstraint, Integer, LargeBinary, Numeric, SmallInteger, String, Table, Text, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
+from sqlalchemy.dialects.postgresql import JSON
 
 Base = declarative_base()
 metadata = Base.metadata

@@ -68,6 +68,26 @@
             </p>
 
             <p>
+
+                Apply this filter: {{ form.apply_filter_k1(class_="form-control") }}
+
+                {{ form.magnetocrystalline_anisotropy_constant_k1_min(class_="form-control") }}
+                <strong>&lt;=</strong>
+                {{ form.magnetocrystalline_anisotropy_constant_k1_max.label }}
+                <strong>&lt;=</strong>
+                {{ form.magnetocrystalline_anisotropy_constant_k1_max(class_="form-control", size="6") }}
+                <strong>(MJ/m<sup>3</sup>)</strong>
+
+                {% if form.magnetocrystalline_anisotropy_constant_k1_min.errors %}
+                    <ul class="errors">{% for error in form.magnetocrystalline_anisotropy_constant_k1_min.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+
+                {% if form.magnetocrystalline_anisotropy_constant_k1_max.errors %}
+                    <ul class="errors">{% for error in form.magnetocrystalline_anisotropy_constant_k1__max.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </p>
+
+            <p>
                 {{ form.unit_cell_formation_enthalpy_min(class_="form-control") }}
                 <strong>&lt;=</strong>
                 {{ form.unit_cell_formation_enthalpy_max.label }}

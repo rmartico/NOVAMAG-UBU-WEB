@@ -16,7 +16,7 @@
 # <http://www.gnu.org/licenses/>.
 
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, DecimalField, SelectField
+from wtforms import StringField, SubmitField, DecimalField, SelectField, BooleanField
 from wtforms.fields.html5 import IntegerField
 from wtforms import validators
 
@@ -29,6 +29,11 @@ class AdvancedSearchForm(Form):
 
     saturation_magnetization_min = DecimalField("Saturation magnetization min",  [validators.NumberRange(min=0, max=100, message='Min. saturation out of range')], default=0, places=2)
     saturation_magnetization_max = DecimalField("Saturation magnetization", [validators.NumberRange(min=0, max=100, message='Max. saturation out of range')], default=100, places=2)
+
+    apply_filter_k1 = BooleanField('Apply filter')
+
+    magnetocrystalline_anisotropy_constant_k1_min = DecimalField("Magnetocrystalline anisotropy constant K1 min", [validators.NumberRange(min=-1000, max=1000, message='Min. magnetocrystalline anisotropy constant out of range')], default=-1000, places=2)
+    magnetocrystalline_anisotropy_constant_k1_max = DecimalField("First magnetocrystalline anisotropy constant K<sub>1</sub>", [validators.NumberRange(min=-1000, max=1000, message='Max. magnetocrystalline anisotropy constant out of range')], default=1000, places=2)
 
     unit_cell_formation_enthalpy_min = DecimalField("Unit cell formation enthalpy min.", [validators.NumberRange(min=-1000, max=1000, message='Min. enthalpy out of range')], default=-1000, places=2)
     unit_cell_formation_enthalpy_max = DecimalField("Unit cell formation enthalpy", [validators.NumberRange(min=-1000, max=1000, message='Max. enthalpy out of range')], default=1000, places=2)
