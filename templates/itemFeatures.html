@@ -338,7 +338,14 @@
                                   title="$$K_{1}, K_{2}$$"></span>
                         </td>
                         <td><strong>Magnetocrystalline anisotropy constants</strong></td>
-                        <td>{{ transformer.unit_translate(item_features.magnetocrystalline_anisotropy_constants,'MegaJoule/meter^3') }}</td>
+                        <td>{{ transformer.unit_translate(item_features.magnetocrystalline_anisotropy_constants,transformer.mega_joule_per_cubic_meters) }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                  title="$$K_{1}$$"></span>
+                        </td>
+                        <td><strong>K<sub>1</sub></strong></td>
+                        <td>{{ transformer.unit_translate(item_features.magnetocrystalline_anisotropy_constants[0],transformer.mega_joule_per_cubic_meters) }}</td>
                     </tr>
                     <tr>
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
@@ -415,7 +422,7 @@
                                   title="Energy product."></span>
                         </td>
                         <td><strong>Energy product</strong></td>
-                        <td>{{ transformer.unit_translate(item_features.energy_product,'kiloJoule/meter^3') }}</td>
+                        <td>{{ transformer.unit_translate(item_features.energy_product, transformer.kilo_joule_per_cubic_meters) }}</td>
                     </tr>
                     <tr>
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
@@ -443,7 +450,7 @@
                                   title="Exchange stiffness."></span>
                         </td>
                         <td><strong>Exchange stiffness</strong></td>
-                        <td>{{ transformer.unit_translate(item_features.exchange_stiffness, 'picoJoule/meter') }}</td>
+                        <td>{{ transformer.unit_translate(item_features.exchange_stiffness, 'PJ/m') }}</td>
                     </tr>
                     <tr>
                         <td><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"

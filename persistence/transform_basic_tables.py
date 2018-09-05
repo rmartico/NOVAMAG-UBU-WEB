@@ -19,11 +19,32 @@
 Transformation of letter to text. See constraints check in, in database script.
 '''
 from urllib import quote_plus
-
+import json
 
 angstrom = u'\u00C5ngstr\u00F6m'
 angstrom_cubic = u'\u00C5ngstr\u00F6m'u'\u00B3'
+mega_joule_per_cubic_meters = u'MJ/m\u00B3'
+kilo_joule_per_cubic_meters = u'KJ/m\u00B3'
 
+
+def extract_json_value(json_array, index):
+    # type: (JSON, int) -> str
+    """
+    Extract the index value in a JSON array.
+
+    :param json_array: JSON array
+    :type json_array: JSON
+    :param index: index
+    :type index: int
+    :return: text with value
+    :rtype: str
+    """
+    print("Tipo de json_array")
+    print(type(json_array))
+    values = json.load(json_array)
+    print("Tipo de values")
+    print(type(values))
+    return values[index]
 
 def parse_url(attached_file):
     # type: (AttachedFile) -> str
@@ -123,7 +144,7 @@ def result_uknown():
     return 'None'
 
 def unit_translate(value, unit):
-    #type: (objetct,str) -> str
+    #type: (object,str) -> str
     """
     Adds the unit to the value
 
@@ -138,8 +159,11 @@ def unit_translate(value, unit):
         return 'None'
     else:
         text = str(value)
-        text = text.encode('ascii', 'ignore')
-        return str(text) + ' (' + unit + ')'
+        if len(text) > 0: #
+            text = text.encode('ascii', 'ignore')
+            return str(text) + ' (' + unit + ')'
+        else: #if len of text is zero show None
+            return 'None'
 
 if __name__ == '__main__':
     object = ' '
