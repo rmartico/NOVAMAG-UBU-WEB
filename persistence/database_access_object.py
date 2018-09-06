@@ -181,6 +181,7 @@ def query_items_by_advanced_search_with_query_string(dict):
         query = query.filter(Composition.numb_of_occurrences <= float(percentage_max))
 
         query = query.filter(Item.confidential.is_(False)).order_by(Item.atomic_formation_enthalpy)# only public order by atomic formation enthallpy
+
         print(query)
         return query.all()
     finally:

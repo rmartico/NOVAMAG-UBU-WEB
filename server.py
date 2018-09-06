@@ -245,11 +245,13 @@ def advanced_search_paginate_result():
     Paginates the result from the advanced search.
     """
     page = request.args.get('page')
+    init_record = ((int(page) - 1) * PAGE_SIZE)
+    end_record = init_record + PAGE_SIZE
+
     list_item = query_items_by_advanced_search_with_query_string(request.args)
     search_term = parse_dict_to_query_string(request.args)
     total = len(list_item)
-    init_record = ((int(page) - 1) * PAGE_SIZE)
-    end_record = init_record + PAGE_SIZE
+
     return render_template('items_advanced_search.html', search_term=search_term, total=total, pages=int(math.ceil(total / PAGE_SIZE)),
                            current_page=page,
                            list_item=list_item[init_record:end_record], parser=parser_search_query, transformer=transform_basic_tables)
