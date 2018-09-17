@@ -232,6 +232,7 @@ def advanced_search_run():
     else:
         #DEBUG print("non validate on submit")
         #DEBUG print(form.is_submitted(), form.validate())
+        pass
 
     return render_template('advanced_search.html', form=form)
 
