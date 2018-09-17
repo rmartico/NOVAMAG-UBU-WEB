@@ -128,7 +128,7 @@ def transform_kind_of_anisotropy(text):
     :rtype: str
     """
     try:
-        dict = {'A': 'Easy axis', 'P': 'Planar easy axis', 'C': 'Easy cone'}
+        dict = {'A': 'Easy axis', 'P': 'Easy plane', 'C': 'Easy cone'}
         return dict[text]
     except:
         return result_uknown()
