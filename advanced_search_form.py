@@ -40,7 +40,7 @@ class AdvancedSearchForm(Form):
 
     atomic_species = StringField("Atomic species")
 
-    species_count = IntegerField("Species count", [validators.NumberRange(min=0, max=10, message='Number out of range')], default=2)
+    species_count = IntegerField("Species count", [validators.NumberRange(min=0, max=10, message='Number out of range')], default=3)
 
     stechiometry_value_min = DecimalField("Stoichiometry percentage min",  [validators.NumberRange(min=0, max=1, message='Min. number out of range')], default=0)
     stechiometry_value_max = DecimalField("Stoichiometry percentage",  [validators.NumberRange(min=0, max=1, message='Min. number out of range')], default=1)
