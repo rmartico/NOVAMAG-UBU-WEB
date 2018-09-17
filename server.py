@@ -96,24 +96,21 @@ def search_result():
         atoms = init_atoms()
         if not contains_ampersand(search_term) or has_only_one_atom(search_term, atoms):
              # find by formula
-            print("Searching by formula")
             list_item = quey_items_by_formula(search_term)
         else:
             # find by elements
-            print("Searching by items")
             list_item = query_items_with_and(search_term)
 
-        print(type(list_item))
         total = len(list_item)
-        print('Total items', type(total))
-        print(type(PAGE_SIZE))
-        print(total)
         num_pages = math.ceil(total / PAGE_SIZE)
-        print(type(num_pages))
-        print(math.ceil(total / PAGE_SIZE))
+        if total == 0:
+            current_page = 0
+        else:
+            current_page = 1
+
         search_term = replace_ampersand_by_minus(search_term)
         return render_template('items.html', search_term=search_term, total=total,
-                               pages=int(math.ceil(total / PAGE_SIZE)), current_page=1,
+                               pages=int(math.ceil(total / PAGE_SIZE)), current_page=current_page, first_page=current_page,
                                list_item=list_item[:PAGE_SIZE], parser=parser_search_query, transformer=transform_basic_tables)
 
 
@@ -124,7 +121,6 @@ def paginate_result():
     Basic search with pages.
     """
     search_term = request.args.get('search_term')
-    print('Search term paginating', search_term)
     search_term = replace_minus_by_ampersand(search_term)
     page = request.args.get('page')
     if (not contains_ampersand(search_term)):
@@ -135,8 +131,14 @@ def paginate_result():
     init_record = ((int(page) - 1) * PAGE_SIZE)
     end_record = init_record + PAGE_SIZE
     search_term = replace_ampersand_by_minus(search_term)
+
+    if total == 0:
+        first_page = 0
+    else:
+        first_page = 1
+
     return render_template('items.html', search_term=search_term, total=total, pages=int(math.ceil(total / PAGE_SIZE)),
-                           current_page=page,
+                           current_page=page, first_page=first_page,
                            list_item=list_item[init_record:end_record], parser=parser_search_query, transformer=transform_basic_tables)
 
 
@@ -211,30 +213,25 @@ def advanced_search_run():
     Collects the advanced search form.
     """
     form = AdvancedSearchForm()
-    print(form.errors)
     if form.validate_on_submit():
-
-        print("Valor de filtrado leido")
-        print(request.form.get('constantk1'))
 
         list_item = query_items_by_advanced_search(form)
         search_query = parse_form_to_query_search(form)
 
-        print(type(list_item))
         total = len(list_item)
-        print('Total items', type(total))
-        print(type(PAGE_SIZE))
-        print(total)
         num_pages = math.ceil(total / PAGE_SIZE)
-        print(type(num_pages))
-        print(math.ceil(total / PAGE_SIZE))
+
+        if total == 0:
+            current_page = 0
+        else:
+            current_page = 1
 
         return render_template('items_advanced_search.html', search_term=search_query, total=total,
-                               pages=int(math.ceil(total / PAGE_SIZE)), current_page=1,
+                               pages=int(math.ceil(total / PAGE_SIZE)), current_page=current_page, first_page=current_page,
                                list_item=list_item[:PAGE_SIZE], parser=parser_search_query, transformer=transform_basic_tables)
     else:
-        print("non validate on submit")
-        print(form.is_submitted(), form.validate())
+        #DEBUG print("non validate on submit")
+        #DEBUG print(form.is_submitted(), form.validate())
 
     return render_template('advanced_search.html', form=form)
 
@@ -251,12 +248,15 @@ def advanced_search_paginate_result():
     list_item = query_items_by_advanced_search_with_query_string(request.args)
     search_term = parse_dict_to_query_string(request.args)
     total = len(list_item)
+    if total == 0:
+        first_page = 0
+    else:
+        first_page = 1
 
     return render_template('items_advanced_search.html', search_term=search_term, total=total, pages=int(math.ceil(total / PAGE_SIZE)),
-                           current_page=page,
+                           current_page=page, first_page=first_page,
                            list_item=list_item[init_record:end_record], parser=parser_search_query, transformer=transform_basic_tables)
 
 if __name__ == '__main__':
-    #Bootstrap(app)
     #app.run(host='0.0.0.0') Acccess from other machines
     app.run(debug=True) # Acccess only from local

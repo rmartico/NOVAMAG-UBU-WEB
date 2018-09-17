@@ -28,7 +28,8 @@
     <div class="navbar">
     </div>
     -->
-    <nav class="navbar navbar-inverse">
+    <!--<nav class="navbar navbar-inverse">-->
+    <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">NOVAMAG</a>
@@ -45,6 +46,17 @@
             <button type="button" class="btn btn-lg" data-toggle="modal" data-target="#myModal">About
             </button>
             {# <button class="btn btn-danger navbar-btn">Button</button>#}
+
+            <ul class="nav navbar-nav navbar-right">
+                 <img src="{{ url_for('static', filename='images/logos/novamag_logo_2_0_trans.png') }}" alt="Novamag Logo"
+             height="42" width="100">
+        <img src="{{ url_for('static', filename='images/logos/logo_iccram.png') }}" alt="ICCRAM Logo"
+             height="42" width="100">
+        <img src="{{ url_for('static', filename='images/logos/escudo_COLOR_2L_DCHA.png') }}" alt="UBU Logo" height="42"
+             width="100">
+        <img src="{{ url_for('static', filename='images/logos/Admirable-Transparente.png') }}" alt="Admirable Logo"
+             height="42" width="42">
+            </ul>
         </div>
 
         <!-- Modal -->
@@ -74,21 +86,8 @@
         </div>
     </nav>
 
-    <div class="navbar navbar-fixed-bottom">
-         <img src="{{ url_for('static', filename='images/logos/novamag_logo_2_0_trans.png') }}" alt="Novamag Logo"
-             height="42" width="100">
-        <img src="{{ url_for('static', filename='images/logos/logo_iccram.png') }}" alt="ICCRAM Logo"
-             height="42" width="100">
-        <img src="{{ url_for('static', filename='images/logos/escudo_COLOR_2L_DCHA.png') }}" alt="UBU Logo" height="42"
-             width="100">
-        <img src="{{ url_for('static', filename='images/logos/Admirable-Transparente.png') }}" alt="Admirable Logo"
-             height="42" width="42">
-        <br>
-        <img src="{{url_for('static', filename='images/logos/EU_logo.jpg')}}" alt="EU Logo" height="42" width="80"><p  style="text-align: justify;  text-justify: inter-word;">
-        <b>H2020 NOVAMAG.</b> This project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreement No 686056. The material presented and views expressed here are the responsibility of the author(s) only. The EU Commission takes no responsibility for any use made of the information set out.
-        </p>
-
-
+    <div class="navbar navbar-static-bottom">
+        <img src="{{url_for('static', filename='images/logos/EU_logo.jpg')}}" alt="EU Logo" height="21" width="40  align="right">H2020 NOVAMAG.</b> This project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreement No 686056. The material presented and views expressed here are the responsibility of the author(s) only. The EU Commission takes no responsibility for any use made of the information set out.
     </div>
 
     <!-- RMS customization of CSS -->
