@@ -34,6 +34,7 @@
                 <th>Atomic formation enthalpy</th>
                 <th>Compound space group</th>
                 <th>Saturation magnetization</th>
+                <th>K<sub>1</sub></th>
             </tr>
             </thead>
             <tbody>
@@ -46,6 +47,7 @@
                     <td>{{ item.atomic_formation_enthalpy }} (ev/Atom)</td>
                     <td>{{ item.compound_space_group }}</td>
                     <td>{{ item.saturation_magnetization }} (Tesla)</td>
+                    <td>{{ transformer.unit_translate(item.magnetocrystalline_anisotropy_constants[0], transformer.mega_joule_per_cubic_meters) }} </td>
                 </tr>
             {% endfor %}
 
