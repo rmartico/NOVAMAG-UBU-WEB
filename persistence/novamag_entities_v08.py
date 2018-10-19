@@ -145,7 +145,7 @@ class Item(Base):
     magnetic_order = Column(ForeignKey('public.magnetic_orders.magnetic_order'))
     curie_temperature = Column(Numeric(8, 3))
     curie_temperature_info = Column(Text)
-    anisotropy_field = Column(Numeric(5, 2))
+    anisotropy_field = Column(Numeric(6, 3))
     remanence = Column(Numeric(6, 3))
     coercivity = Column(Numeric(6, 3))
     energy_product = Column(Numeric(8, 3))

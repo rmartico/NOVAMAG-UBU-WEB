@@ -27,7 +27,7 @@ from persistence import parser_search_query
 import config
 import math
 
-from persistence.database_access_object import query_items, query_item_features, query_items_with_and, \
+from persistence.database_access_object import query_item_features, query_items_with_and, \
     query_attached_files_of_item, query_authors_of_item, restore_image, restore_unitcell_jpg, quey_items_by_formula, \
     query_items_by_advanced_search, query_items_by_advanced_search_with_query_string, init_atoms, set_session_maker, ATOMS
 
