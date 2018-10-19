@@ -23,6 +23,7 @@ from persistence.novamag_entities_v08 import Item, AttachedFile, Author, Atom, M
 from persistence.parser_search_query import parse_with_and, replace_minus_by_ampersand
 from sqlalchemy import cast, Float
 from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION
+import re
 
 # Global variables
 SessionMaker = None
@@ -77,9 +78,6 @@ def query_items_by_advanced_search(form):
         apply_filter_k1 = form.apply_filter_k1.data
 
         if apply_filter_k1: # if the user wants to apply the filter
-            print("Aplicamos el filtro en la construccion de la SQL")
-            print(type(Item.magnetocrystalline_anisotropy_constants[0]))
-            print(Item.magnetocrystalline_anisotropy_constants[0])
             query = query.filter(Item.magnetocrystalline_anisotropy_constants[0].astext.cast(DOUBLE_PRECISION) >= form.magnetocrystalline_anisotropy_constant_k1_min.data)
             query = query.filter(Item.magnetocrystalline_anisotropy_constants[0].astext.cast(DOUBLE_PRECISION) <= form.magnetocrystalline_anisotropy_constant_k1_max.data)
 
@@ -87,9 +85,10 @@ def query_items_by_advanced_search(form):
         query = query.filter(Item.unit_cell_formation_enthalpy >= form.unit_cell_formation_enthalpy_min.data)
         query = query.filter(Item.unit_cell_formation_enthalpy <= form.unit_cell_formation_enthalpy_max.data)
         # 5
+        # two solutions: regular expressions or using symbol...
+        # we collect the symbols in the filter
         atoms = parse_with_and(form.atomic_species.data)
-        for atom in atoms:
-            query = query.filter(Item.formula.contains(atom))
+        # this step is deferred to the function filter_items_with_regular_expression at the end of the method
         # 6
         if form.species_count.data is not None:
             query = query.filter(Item.species_count == form.species_count.data)
@@ -104,9 +103,31 @@ def query_items_by_advanced_search(form):
 
         # ORDER BY
         query = query.filter(Item.confidential.is_(False)).order_by(Item.atomic_formation_enthalpy)# only public order by atomic formation enthallpy
-        return query.all()
+
+        # again step 5 filter using regular expression with the atoms previously collected
+        return filter_items_with_regular_expression(query.all(), atoms)
     finally:
         session.close()
+
+def filter_items_with_regular_expression(items, atoms):
+    # type: (list, list) -> list
+    '''
+    Filter the list of items containing in its formula the atoms.
+
+    :param items: items
+    :param atoms: atoms
+    :return: list of items with atoms
+    '''
+    new_list = list()
+    for item in items:
+        count = 0
+        for atom in atoms:
+            pattern = '^(' + atom + '[A-Z0-9].*|.*' + atom + '[A-Z0-9]+.*|.*' + atom + '[0-9]*)$'
+            if re.match(pattern, item.formula) != None:
+                count = count + 1
+        if count == len(atoms): # match all the atoms
+            new_list.append(item)
+    return new_list
 
 
 def str_to_bool(text):
@@ -135,8 +156,6 @@ def query_items_by_advanced_search_with_query_string(dict):
     """
     session = SessionMaker()
     try:
-        print('Analyzing query string')
-        print(dict)
         # TODO duplicated code (see query_items_by_advanced_search)
         #query = session.query(Item)
         query = session.query(Item).join(Molecule).join(Composition)
@@ -149,12 +168,8 @@ def query_items_by_advanced_search_with_query_string(dict):
 
         # 3
         apply_filter_k1 = str_to_bool(dict['apply_filter_k1'])
-        print(apply_filter_k1)
 
         if apply_filter_k1:  # if the user wants to apply the filter
-            print("SI SE USA")
-            #query = query.filter(Item.magnetocrystalline_anisotropy_constants[0] >= dict['magnetocrystalline_anisotropy_constant_k1_min'])
-            #query = query.filter(Item.magnetocrystalline_anisotropy_constants[0] <= dict['magnetocrystalline_anisotropy_constant_k1_max'])
             query = query.filter(Item.magnetocrystalline_anisotropy_constants[0].astext.cast(DOUBLE_PRECISION) >= dict['magnetocrystalline_anisotropy_constant_k1_min'])
             query = query.filter(Item.magnetocrystalline_anisotropy_constants[0].astext.cast(DOUBLE_PRECISION) <= dict['magnetocrystalline_anisotropy_constant_k1_max'])
 
@@ -164,8 +179,8 @@ def query_items_by_advanced_search_with_query_string(dict):
         # 5
         text_atoms = replace_minus_by_ampersand(dict['atomic_species'])
         atoms = parse_with_and(text_atoms)
-        for atom in atoms:
-            query = query.filter(Item.formula.contains(atom))
+        # this step is deferred at the end of the method
+        # collect the atoms to filter using regular expression
         # 6
         if dict['species_count'] is not None:
             query = query.filter(Item.species_count == dict['species_count'])
@@ -174,16 +189,15 @@ def query_items_by_advanced_search_with_query_string(dict):
         symbol = dict['stechiometry_atom']
         percentage_min = dict['stechiometry_value_min']
         percentage_max = dict['stechiometry_value_max']
-        print('Symbol is ' + symbol)
-        print('Percentage is ' + percentage_min)
+
         query = query.filter(Composition.symbol == symbol)
         query = query.filter(Composition.numb_of_occurrences >= float(percentage_min))
         query = query.filter(Composition.numb_of_occurrences <= float(percentage_max))
 
         query = query.filter(Item.confidential.is_(False)).order_by(Item.atomic_formation_enthalpy)# only public order by atomic formation enthallpy
 
-        print(query)
-        return query.all()
+        # again step 5 filter using regular expression with the atoms previously collected
+        return filter_items_with_regular_expression(query.all(), atoms)
     finally:
         session.close()
 
@@ -266,9 +280,9 @@ def quey_items_by_formula(search_term):
     """
     session = SessionMaker()
     try:
-        query = session.query(Item).filter(Item.formula.contains(search_term)) \
-            .filter(Item.confidential.is_(False)) \
-            .order_by(Item.mafid)
+        # Regular expression searching the atom inside the formula
+        patron = '^(' + search_term + '[A-Z0-9].*|.*' + search_term + '[A-Z0-9]+.*|.*' + search_term + '[0-9]*)$'
+        query = session.query(Item).from_statement("SELECT * FROM ITEMS WHERE formula ~ '" + patron + "' AND confidential=false ORDER BY mafid")
         return query.all()
     finally:
         session.close()
@@ -287,31 +301,20 @@ def query_items_with_and(search_term):
     session = SessionMaker()
     try:
         atoms = parse_with_and(search_term)
-        query = session.query(Item)
+        count  = 0
         for atom in atoms:
-            query = query.filter(Item.formula.contains(atom))
-        query = query.filter(Item.confidential.is_(False)).order_by(Item.mafid)
+            # Regular expression searching the atom inside the formula
+            patron = '^(' + atom + '[A-Z0-9].*|.*' + atom + '[A-Z0-9]+.*|.*' + atom + '[0-9]*)$'
+            if count == 0:
+                filtro = " formula ~ '" + patron + "'"
+            else:
+                count = count + 1
+                filtro = filtro + " AND formula ~ '" + patron + "'"
+
+        query = session.query(Item).from_statement("SELECT * FROM ITEMS WHERE " + filtro + " AND confidential=false ORDER BY mafid")
         return query.all()
     finally:
         session.close()
-
-
-def query_items(search_term):
-    # type: (str) -> list[Item]
-    """
-    Query the material features of current material.
-
-    :param search_term: search term
-    :type search_term: str
-    :return: items containing the search term
-    :rtype: list[Item]
-    """
-    session = SessionMaker()
-    try:
-        return session.query(Item).filter(Item.formula.contains(search_term))
-    finally:
-        session.close()
-
 
 def query_item_features(mafid):
     # type: (str) -> Item
