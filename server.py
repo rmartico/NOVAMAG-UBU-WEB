@@ -48,8 +48,9 @@ SessionMaker = db.sessionmaker(bind=engine)
 set_session_maker(SessionMaker)
 # Looad initially the atom list.
 init_atoms()
-# Load the advanced form after loading the dynamic list
+# Load the advanced forms after loading the dynamic list
 from advanced_search_form import AdvancedSearchForm
+from plotting_tool_search_form import PlottingToolSearchForm
 
 # PRESENTATION Set up
 PAGE_SIZE = 10  # Size of records per page
@@ -257,6 +258,15 @@ def advanced_search_paginate_result():
     return render_template('items_advanced_search.html', search_term=search_term, total=total, pages=int(math.ceil(total / PAGE_SIZE)),
                            current_page=page, first_page=first_page,
                            list_item=list_item[init_record:end_record], parser=parser_search_query, transformer=transform_basic_tables)
+
+@app.route('/plotting_tool_search')
+def plotting_tool_search():
+    """
+    Renders the advanced search form.
+    """
+    form = PlottingToolSearchForm()
+    return render_template('plotting_tool_search.html', form=form)
+
 
 if __name__ == '__main__':
     #app.run(host='0.0.0.0') Acccess from other machines
