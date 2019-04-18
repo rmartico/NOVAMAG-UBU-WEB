@@ -1,0 +1,82 @@
+<!--
+     Copyright (C) 2017-2018 UBU-ICCRAM-ADMIRABLE-NOVAMAG-GA686056
+     http://crono.ubu.es/novamag
+
+ This Program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2, or (at your option)
+ any later version.
+
+ This Program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with UBU-ICCRAM-ADMIRABLE-NOVAMAG-GA686056  see the file COPYING.  If not, see
+ <http://www.gnu.org/licenses/>.
+-->
+
+{% extends "novamag_base.html" %}
+{% block content %}
+    <!-- Load chart.js library and plugins -->
+    <script type="text/javascript" src="{{ url_for('static', filename='chartjs/Chart.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='chartjs/chartjs-plugin-colorschemes.js') }}"></script>
+    <h1>NOVAMAG Plotting Tool Chart </h1>
+    <h4>Total records: {{ total_records }}. Element 1: {{ elements[0] }}. Element 2: {{ elements[1] }}<h4>
+
+<!-- To avoid the resize the size is marked in the div -->
+<div style="position:relative; top:60px; left:10px; width:800px; height:600px;">
+<canvas id="line-chart" width="640" height="400"></canvas>
+</div>
+<script>
+new Chart(document.getElementById("line-chart"), {
+    type: 'line',
+
+    data: {
+        datasets: [
+          {% for item in items %}
+            {
+            data: [{ x: {{ item[axis[0]] }} , y : {{ item[axis[1]] }} }]
+            },
+          {% endfor %}
+		]
+    },
+    options: {
+        legend: {
+			display: false
+		},
+		scales: {
+            xAxes: [{
+                type: 'linear',
+                position: 'bottom',
+				scaleLabel: {
+					display: true,
+					labelString: '{{ axis_print[0] }}'
+				}
+            }],
+			yAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: '{{ axis_print[1] }}'
+				}
+			}]
+        },
+		plugins: {
+			colorschemes: {
+				scheme: 'tableau.Tableau20'
+			}
+		},
+		tooltips: {
+			callbacks: {
+				label: function(tooltipItem, data) {
+						return tooltipItem.yLabel;
+					}
+			}
+		},
+        showLines: false // disable for all datasets
+    }
+});
+</script>
+
+{% endblock %}

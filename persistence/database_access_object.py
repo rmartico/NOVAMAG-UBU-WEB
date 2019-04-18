@@ -351,5 +351,71 @@ def query_atoms():
     finally:
         session.close()
 
+
+##################################
+# Plotting tool queries
+##################################
+def query_items_by_plotting_tool_search(form):
+    # type: (form) -> list[Item]
+    """
+    Query the items in the search query
+
+    :param form data
+    :type form: form
+    :return: items containing ALL the filters
+    :rtype: list[Item]
+    """
+    session = SessionMaker()
+    try:
+        query = session.query(Item).join(Molecule).join(Composition)
+        # 1
+        #query = query.filter(Item.compound_space_group >= form.compound_space_group_min.data)
+        #query = query.filter(Item.compound_space_group <= form.compound_space_group_max.data)
+        # 2
+        #query = query.filter(Item.saturation_magnetization >= form.saturation_magnetization_min.data)
+        #query = query.filter(Item.saturation_magnetization <= form.saturation_magnetization_max.data)
+
+        #3 first magnetocrystalline anisotropy constants
+        #apply_filter_k1 = form.apply_filter_k1.data
+        #if apply_filter_k1: # if the user wants to apply the filter
+        #    query = query.filter(Item.magnetocrystalline_anisotropy_constants[0].astext.cast(DOUBLE_PRECISION) >= form.magnetocrystalline_anisotropy_constant_k1_min.data)
+        #    query = query.filter(Item.magnetocrystalline_anisotropy_constants[0].astext.cast(DOUBLE_PRECISION) <= form.magnetocrystalline_anisotropy_constant_k1_max.data)
+
+        # 4
+        #query = query.filter(Item.unit_cell_formation_enthalpy >= form.unit_cell_formation_enthalpy_min.data)
+        #query = query.filter(Item.unit_cell_formation_enthalpy <= form.unit_cell_formation_enthalpy_max.data)
+
+        # 5
+        # two solutions: regular expressions or using symbol...
+        # we collect the symbols in the filter
+        #atoms = parse_with_and(form.atomic_species.data)
+        atoms = list()
+        atoms.append(form.element1.data)
+        atoms.append(form.element2.data)
+        print("Filtro", atoms)
+        # this step is deferred to the function filter_items_with_regular_expression at the end of the method
+
+        # 6
+        query = query.filter(Item.species_count >= 2) # Requirement established by PNC on 12th april 2019
+
+        # 7
+        # composition percentage...
+        #symbol = form.stechiometry_atom.data
+        #percentage_min = form.stechiometry_value_min.data
+        #percentage_max = form.stechiometry_value_max.data
+        #query = query.filter(Composition.symbol == symbol)
+        #query = query.filter(Composition.numb_of_occurrences >= float(percentage_min))
+        #query = query.filter(Composition.numb_of_occurrences <= float(percentage_max))
+
+        # ORDER BY
+        query = query.filter(Item.confidential.is_(False)).order_by(Item.atomic_formation_enthalpy)# only public order by atomic formation enthallpy
+
+        # again step 5 filter using regular expression with the atoms previously collected
+        return filter_items_with_regular_expression(query.all(), atoms)
+    finally:
+        session.close()
+
+
+
 if __name__ == '__main__':
     print('Not yet implemented')

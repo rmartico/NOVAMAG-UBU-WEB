@@ -29,7 +29,8 @@ import math
 
 from persistence.database_access_object import query_item_features, query_items_with_and, \
     query_attached_files_of_item, query_authors_of_item, restore_image, restore_unitcell_jpg, quey_items_by_formula, \
-    query_items_by_advanced_search, query_items_by_advanced_search_with_query_string, init_atoms, set_session_maker, ATOMS
+    query_items_by_advanced_search, query_items_by_advanced_search_with_query_string, init_atoms, set_session_maker, ATOMS, \
+    query_items_by_plotting_tool_search
 
 from persistence.parser_search_query import contains_ampersand, replace_ampersand_by_minus, replace_minus_by_ampersand, \
     parse_form_to_query_search, parse_dict_to_query_string, has_only_one_atom
@@ -259,14 +260,55 @@ def advanced_search_paginate_result():
                            current_page=page, first_page=first_page,
                            list_item=list_item[init_record:end_record], parser=parser_search_query, transformer=transform_basic_tables)
 
+##############################
+# Plotting tool new urls
+##############################
+import persistence.transform_basic_tables as transformer
+
+
 @app.route('/plotting_tool_search')
 def plotting_tool_search():
     """
     Renders the advanced search form.
     """
-    form = PlottingToolSearchForm()
-    return render_template('plotting_tool_search.html', form=form)
+    formP = PlottingToolSearchForm()
+    return render_template('plotting_tool_search.html', form=formP)
 
+@app.route('/plotting_tool_search_run', methods=['POST'])
+def plotting_tool_search_run():
+    print("Iniciando...")
+    """
+    Collects the plotting search form.
+    """
+    form = PlottingToolSearchForm()
+
+    print("Leido el form...")
+    print(form.x_axis.data)
+    print(form.y_axis.data)
+    print(form.element1.data)
+    print(form.element2.data)
+
+    list_items = query_items_by_plotting_tool_search(form)
+    print(len(list_items))
+    for item in list_items:
+        print(item.formula)
+
+    # FIXME currently redirect to index...
+    axis = [ form.x_axis.data, form.y_axis.data]
+    #axis = [ 'atom_volume', 'atomic_formation_enthalpy' ]
+    elements = [form.element1.data, form.element2.data]
+
+    # extract tuples with (key, descriptor +  units) for print key and text
+    list_choices = [(p[0], (p[1][0] + ' ' + p[1][1]).rstrip()) for p in transform_basic_tables.AXIS_CHOICES.items()]
+    dict_choices = dict(list_choices) # convert to dict
+    axis_print = [ dict_choices[form.x_axis.data], dict_choices[form.y_axis.data]]
+    # End
+
+    return render_template('plotting_tool_chart.html', axis=axis, axis_print=axis_print, elements=elements, items=list_items, total_records=len(list_items))
+
+####################################
+# End of plotting tools new urls
+####################################
 
 if __name__ == '__main__':
     #app.run(host='0.0.0.0') Acccess from other machines

@@ -165,6 +165,24 @@ def unit_translate(value, unit):
         else: #if len of text is zero show None
             return 'None'
 
+# For Plotting Tool Chart
+# Define the set ot values in select field for X and Y axis...
+AXIS_CHOICES = {'atom_volume' :  [ 'Atom Volume', '(' + angstrom_cubic + '/Atom)'], # Column(Numeric(9, 4)
+                'stoichiometry' : ['Stoichiometry', '(at.%)'], # In Molecule as Column(String(30)... WARNING NOT NUMERIC
+                'compound_space_group' : [ 'Compound Space Group', '' ], # Column(SmallInteger)
+                'atomic_formation_enthalpy' : [ 'Atomic Formation Enthalpy', '(eV/Atom)' ], # Column(Numeric(11, 7)
+                'atomic_energy' :  [ 'Atomic Energy', '(eV/Atom)' ], # Column(Numeric(10, 7))
+                'saturation_magnetization' : [ 'Saturation Magnetization', '(Tesla)' ], # Column(Numeric(6, 3)
+                'magnetocrystalline_anisotropy_constants' : [ 'First Magnetocrystalline Anisotropy Constant K1', '(' + mega_joule_per_cubic_meters + ')'], # WARNING Column(JSON)
+                'curie_temperature' : [ 'Curie Temperature', '(Kelvin)' ], # Column(Numeric(8, 3))
+                'anisotropy_field' : [ 'Anisostropy Field','(Tesla)' ],# Column(Numeric(6, 3)
+                'remanence' : [ 'Remanence', '(Tesla)' ], # Column(Numeric(6, 3)
+                'coercivity' : [ 'Coercivity', '(Tesla)' ], # Column(Numeric(6, 3)
+                'energy_product' : [ 'Energy Product', '(' + kilo_joule_per_cubic_meters +')'], # Column(Numeric(8, 3)
+                'domain_wall_width' : [ 'Domain Wall Width', '(nanometer)' ], # Column(Numeric(7, 3)
+                'exchange_stiffness' : [ 'Exchange Stiffness', 'PJ/m' ] # Column(Numeric(7, 3)
+                }
+
 if __name__ == '__main__':
     object = ' '
     print(unit_translate(object,'texto'))
