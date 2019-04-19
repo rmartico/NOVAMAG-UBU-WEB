@@ -41,23 +41,40 @@ new Chart(document.getElementById("line-chart"), {
         datasets: [
           {% for item in items %}
            {% if axis[0] != 'magnetocrystalline_anisotropy_constants' and axis[1] != 'magnetocrystalline_anisotropy_constants' %}
-            {
-            <!-- Not mag.ani.const -->
-            data: [{ x: {{ item[axis[0]] }} , y : {{ item[axis[1]] }} }]
-            },
+                {% if axis[0] != 'stechiometry' and axis[1] != 'stechiometry' %}
+                    {
+                    <!-- Not mag.ani.const neither stoichiometry NORMAL CASE -->
+                    data: [{ x: {{ item[axis[0]] }} , y : {{ item[axis[1]] }} }]
+                    },
+                {% elif  axis[0] != 'stechiometry' and axis[1] == 'stechiometry' %}
+                    {
+                    <!-- using stoichiometry in y-axis -->
+                    data: [{ x: {{ item[axis[0]] }} , y : {{ stoichiometry_axis_values[items.index(item)] }} }]
+                    },
+                {% elif  axis[0] == 'stechiometry' and axis[1] != 'stechiometry' %}
+                    {
+                    <!-- using stoichiometry in x-axis -->
+                    data: [{ x: {{ stoichiometry_axis_values[items.index(item)] }}  , y : {{ item[axis[1]] }} }]
+                    },
+                {% else %}
+                    {
+                    <!-- using stoichiometry in both axis -->
+                    data: [{ x: {{ stoichiometry_axis_values[items.index(item)] }}  , y : {{ stoichiometry_axis_values[items.index(item)] }} }]
+                    },
+                {% endif %}
             {% elif axis[0] == 'magnetocrystalline_anisotropy_constants' and axis[1] != 'magnetocrystalline_anisotropy_constants' %}
             {
-            <!-- Using mag.ani.const in x axis-->
+            <!-- Using magnetocrystalline_anisotropy_constants in x axis-->
             data: [{ x: {{ item[axis[0]][0] }} , y : {{ item[axis[1]] }} }]
             },
             {% elif axis[0] != 'magnetocrystalline_anisotropy_constants' and axis[1] == 'magnetocrystalline_anisotropy_constants' %}
             {
-            <!-- Using mag.ani.const in y axis-->
+            <!-- Using magnetocrystalline_anisotropy_constants in y axis-->
             data: [{ x: {{ item[axis[0]] }} , y : {{ item[axis[1]][0] }} }]
             },
             {% else %}
             {
-            <!-- Using mag.ani.const in x and y axis -->
+            <!-- Using magnetocrystalline_anisotropy_constants in both x and y axis -->
             data: [{ x: {{ item[axis[0]][0] }} , y : {{ item[axis[1]][0] }} }]
             },
             {% endif %}

@@ -20,11 +20,22 @@ Transformation of letter to text. See constraints check in, in database script.
 '''
 from urllib import quote_plus
 import json
+import re
 
 angstrom = u'\u00C5ngstr\u00F6m'
 angstrom_cubic = u'\u00C5ngstr\u00F6m'u'\u00B3'
 mega_joule_per_cubic_meters = u'MJ/m\u00B3'
 kilo_joule_per_cubic_meters = u'KJ/m\u00B3'
+
+# Subindex characters for stoichoimetry legend in charts
+left_parenthesis_sub = u"\u208D"
+right_parenthesis_sub = u'\u208E'
+minus_sub = u'\u208B'
+one_sub = u'\u2081'
+x_sub = u'\u2093'
+one_minus_x_sub = left_parenthesis_sub + one_sub + minus_sub + x_sub + right_parenthesis_sub
+# examplo (1-x) and (x) but in subindex
+
 
 
 def extract_json_value(json_array, index):
@@ -172,12 +183,12 @@ def unit_translate(value, unit):
 # For Plotting Tool Chart
 # Define the set ot values in select field for X and Y axis...
 AXIS_CHOICES = {'atom_volume' :  [ 'Atom Volume', '(' + angstrom_cubic + '/Atom)'], # Column(Numeric(9, 4)
-                'stoichiometry' : ['Stoichiometry', '(at.%)'], # In Molecule as Column(String(30)... WARNING NOT NUMERIC
+                'stechiometry' : ['Stoichiometry', '(at.%)'], # In Molecule as Column(String(30)... WARNING NOT NUMERIC
                 'compound_space_group' : [ 'Compound Space Group', '' ], # Column(SmallInteger)
                 'atomic_formation_enthalpy' : [ 'Atomic Formation Enthalpy', '(eV/Atom)' ], # Column(Numeric(11, 7)
                 'atomic_energy' :  [ 'Atomic Energy', '(eV/Atom)' ], # Column(Numeric(10, 7))
                 'saturation_magnetization' : [ 'Saturation Magnetization', '(Tesla)' ], # Column(Numeric(6, 3)
-                'magnetocrystalline_anisotropy_constants' : [ 'First Magnetocrystalline Anisotropy Constant K1', '(' + mega_joule_per_cubic_meters + ')'], # WARNING Column(JSON)
+                'magnetocrystalline_anisotropy_constants' : [ 'First Magnetocrystalline Anisotropy Constant K' + one_sub, '(' + mega_joule_per_cubic_meters + ')'], # WARNING Column(JSON)
                 'curie_temperature' : [ 'Curie Temperature', '(Kelvin)' ], # Column(Numeric(8, 3))
                 'anisotropy_field' : [ 'Anisostropy Field','(Tesla)' ],# Column(Numeric(6, 3)
                 'remanence' : [ 'Remanence', '(Tesla)' ], # Column(Numeric(6, 3)
@@ -186,6 +197,53 @@ AXIS_CHOICES = {'atom_volume' :  [ 'Atom Volume', '(' + angstrom_cubic + '/Atom)
                 'domain_wall_width' : [ 'Domain Wall Width', '(nanometer)' ], # Column(Numeric(7, 3)
                 'exchange_stiffness' : [ 'Exchange Stiffness', 'PJ/m' ] # Column(Numeric(7, 3)
                 }
+
+def stoichiometry_calculate_axis_values(list_items, elements):
+    #type: (list[Item]) -> list[float]
+    """
+    Calculate the column with values for stoichiometry with the current ordered elements.
+
+    :param list_items: list of items
+    :type list_items: list[Item]
+    :param elements: ordered list with the two elements
+    :type elements: list[str]
+    :return: list of stoichiometry x value calculated as x = m/(n+m)
+    :rtype: list[float]
+    """
+    values = list()
+    # Compile regular expressions...
+    proc_element1 = re.compile(r'^.*' + elements[0] + '(0.\d*).*$')
+    proc_element2 = re.compile(r'^.*' + elements[1] + '(0.\d*).*$')
+
+    # Extract values for each tiem
+    for item in list_items:
+        # e.g., given Al n Fe n then where x = m / (n+m) (see documentation in mail of PNC - 18 april 2019)
+        valueN = extract_stoichiometry_value(item.molecule.stechiometry, proc_element1);
+        valueM = extract_stoichiometry_value(item.molecule.stechiometry, proc_element2);
+        x = valueM / (valueN + valueM)
+        values.append(x)
+    return values
+
+def extract_stoichiometry_value(stoichiometry, proc):
+    # type: (str, parser) -> float
+    """
+    Calculate the stoichiometry value for an element in the formula
+
+    :param stoichiometry : stoichiometry
+    :type stoichiometry: str
+    :param element: element
+    :type element: str
+    :param proc : regular expression compiler
+    :type proc: parser
+    :return: stoichiometry value of the element
+    :rtype: float
+    """
+    result = proc.match(stoichiometry)
+    if result != None and len(result.groups()) > 0: # should happen always
+        value = float(result.group(1))
+        return value
+    else:
+        return 0.0 # BAD VALUE
 
 if __name__ == '__main__':
     object = ' '

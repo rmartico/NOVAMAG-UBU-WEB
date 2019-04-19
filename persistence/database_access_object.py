@@ -431,8 +431,18 @@ def filter_items_before_plotting_tool(list_items, x_axis, y_axis):
     """
     result = list()
     for item in list_items:
-        if getattr(item,x_axis) != None and getattr(item,y_axis) != None:
-            result.append(item) # exist both values...
+        if x_axis != 'stechiometry' and y_axis != 'stechiometry':
+            if getattr(item,x_axis) != None and getattr(item,y_axis) != None:
+                result.append(item) # exist both values...
+        else:
+            if x_axis == 'stechiometry' and y_axis !=  'stechiometry':
+                if getattr(item, y_axis) != None:
+                    result.append(item)  # exist stoichoimetry and y-value
+            elif x_axis != 'stechiometry' and y_axis ==  'stechiometry':
+                if getattr(item, x_axis) != None:
+                    result.append(item)  # exist x-value and stoichoimetry
+            else:
+                result.append(item)  # # both axis are stoichoimetry, exist both values...
     return result
 
 if __name__ == '__main__':

@@ -282,32 +282,50 @@ def plotting_tool_search_run():
     """
     form = PlottingToolSearchForm()
 
-    print("Leido el form...")
-    print(form.x_axis.data)
-    print(form.y_axis.data)
-    print(form.element1.data)
-    print(form.element2.data)
-
+    # Obtain data from database and filter null/None values
     list_items = query_items_by_plotting_tool_search(form)
     list_items = filter_items_before_plotting_tool(list_items, form.x_axis.data, form.y_axis.data)
 
-    print(len(list_items))
-    for item in list_items:
-        print(item.formula)
-
-    # FIXME currently redirect to index...
+    # Prepare data
     axis = [ form.x_axis.data, form.y_axis.data]
-    #axis = [ 'atom_volume', 'atomic_formation_enthalpy' ]
     elements = [form.element1.data, form.element2.data]
 
-    # extract tuples with (key, descriptor +  units) for print key and text
+
+    # if any axis is Stoichiometry ("stechiometry" ;)) obtain new data column for the axis
+    # we need to generate an "artificial calculated" new column" because this is not stored in database
+    stoichiometry_axis_values = list()
+    if axis[0] == 'stechiometry' or axis[1] == 'stechiometry': # if user select stoichiometry...
+        stoichiometry_axis_values = transform_basic_tables.stoichiometry_calculate_axis_values(list_items, elements)
+        print(stoichiometry_axis_values)
+
+
+    # extract tuples with (key, descriptor +  units) for print key and text for axis
     list_choices = [(p[0], (p[1][0] + ' ' + p[1][1]).rstrip()) for p in transform_basic_tables.AXIS_CHOICES.items()]
     dict_choices = dict(list_choices) # convert to dict
     axis_print = [ dict_choices[form.x_axis.data], dict_choices[form.y_axis.data]]
+    # Exception with stoichiometry
+    if axis[0] == 'stechiometry':
+        axis_print[0] = elements[0] + transform_basic_tables.one_minus_x_sub + elements[1] + transform_basic_tables.x_sub
+    if axis[1] == 'stechiometry':
+        axis_print[1] = elements[0] + transform_basic_tables.one_minus_x_sub + elements[1] + transform_basic_tables.x_sub
     # End
 
+    # Debug
+    # generate a trace with csv format for export
+    print('mafid,formula, stoichiometry, x, y ')
+    for item in list_items:
+        if axis[0] != 'stechiometry' and axis[1] != 'stechiometry':
+            print(str(item.mafid) + "," + item.formula + "," + item.molecule.stechiometry + "," + str(getattr(item, form.x_axis.data)) + "," + str(getattr(item, form.y_axis.data)))
+        elif axis[0] == 'stechiometry' and axis[1] != 'stechiometry':
+            print(str(item.mafid) + "," + item.formula + "," + item.molecule.stechiometry + "," + str(stoichiometry_axis_values[list_items.index(item)]) + "," + str(getattr(item, form.y_axis.data)))
+        elif axis[0] == 'stechiometry' and axis[1] != 'stechiometry':
+            print(str(item.mafid) + "," + item.formula + "," + item.molecule.stechiometry + "," + str(getattr(item, form.x_axis.data)) + "," + str(stoichiometry_axis_values[list_items.index(item)]))
+        else:
+            print(str(item.mafid) + "," + item.formula + "," + item.molecule.stechiometry + "," + str(stoichiometry_axis_values[list_items.index(item)]) + "," + str(stoichiometry_axis_values[list_items.index(item)]))
+
+    # Render html page with data...
     return render_template('plotting_tool_chart.html', axis=axis, axis_print=axis_print, elements=elements, items=list_items,
-                           total_records=len(list_items), transformer=transform_basic_tables)
+                           total_records=len(list_items), transformer=transform_basic_tables, stoichiometry_axis_values=stoichiometry_axis_values)
 
 ####################################
 # End of plotting tools new urls
