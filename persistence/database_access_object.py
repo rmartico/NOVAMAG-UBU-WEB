@@ -415,7 +415,25 @@ def query_items_by_plotting_tool_search(form):
     finally:
         session.close()
 
+def filter_items_before_plotting_tool(list_items, x_axis, y_axis):
+    # type: (list[Item], str, str) -> list[Item]
+    """
+    Filter the list of items removing items with None in the value of x_axis or y_axis
 
+    :param list_items full list of items
+    :type list[Item]
+    :param x_axis name of property in x_axis
+    :type str
+    :param y_axis name of property in y_axis
+    :type str
+    :return: clean items
+    :rtype: list[Item]
+    """
+    result = list()
+    for item in list_items:
+        if getattr(item,x_axis) != None and getattr(item,y_axis) != None:
+            result.append(item) # exist both values...
+    return result
 
 if __name__ == '__main__':
     print('Not yet implemented')

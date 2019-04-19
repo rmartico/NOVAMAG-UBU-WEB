@@ -30,7 +30,7 @@ import math
 from persistence.database_access_object import query_item_features, query_items_with_and, \
     query_attached_files_of_item, query_authors_of_item, restore_image, restore_unitcell_jpg, quey_items_by_formula, \
     query_items_by_advanced_search, query_items_by_advanced_search_with_query_string, init_atoms, set_session_maker, ATOMS, \
-    query_items_by_plotting_tool_search
+    query_items_by_plotting_tool_search, filter_items_before_plotting_tool
 
 from persistence.parser_search_query import contains_ampersand, replace_ampersand_by_minus, replace_minus_by_ampersand, \
     parse_form_to_query_search, parse_dict_to_query_string, has_only_one_atom
@@ -289,6 +289,8 @@ def plotting_tool_search_run():
     print(form.element2.data)
 
     list_items = query_items_by_plotting_tool_search(form)
+    list_items = filter_items_before_plotting_tool(list_items, form.x_axis.data, form.y_axis.data)
+
     print(len(list_items))
     for item in list_items:
         print(item.formula)
@@ -304,7 +306,8 @@ def plotting_tool_search_run():
     axis_print = [ dict_choices[form.x_axis.data], dict_choices[form.y_axis.data]]
     # End
 
-    return render_template('plotting_tool_chart.html', axis=axis, axis_print=axis_print, elements=elements, items=list_items, total_records=len(list_items))
+    return render_template('plotting_tool_chart.html', axis=axis, axis_print=axis_print, elements=elements, items=list_items,
+                           total_records=len(list_items), transformer=transform_basic_tables)
 
 ####################################
 # End of plotting tools new urls
