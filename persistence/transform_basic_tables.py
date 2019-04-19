@@ -40,11 +40,15 @@ def extract_json_value(json_array, index):
     :rtype: str
     """
     print("Tipo de json_array")
-    print(type(json_array))
-    values = json.load(json_array)
-    print("Tipo de values")
-    print(type(values))
-    return values[index]
+    if json_array != None:
+        print(json_array)
+        print(type(json_array))
+        values = json.load(json_array)
+        print("Tipo de values")
+        print(type(values))
+        return values[index]
+    else:
+        return None
 
 def parse_url(attached_file):
     # type: (AttachedFile) -> str
