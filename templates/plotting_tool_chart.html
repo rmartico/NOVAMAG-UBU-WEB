@@ -34,6 +34,22 @@
 <canvas id="line-chart" width="640" height="400"></canvas>
 </div>
 <script>
+function blobCallback(name) {
+  return function(b) {
+    var a = document.createElement("a");
+    a.textContent = "Download image";
+	a.style.display = 'none'; // hidden link
+    a.download = "plotting_tool_chart.jpg"
+    a.href = window.URL.createObjectURL(b);
+	// use and remove
+	document.body.appendChild(a);
+	a.click() // save image
+	document.body.removeChild(a);
+  }
+}
+
+var canvas = document.getElementById('line-chart')
+
 new Chart(document.getElementById("line-chart"), {
     type: 'line',
 
@@ -117,5 +133,8 @@ new Chart(document.getElementById("line-chart"), {
     }
 });
 </script>
+<div style="position:relative; top:5px; left:5px;">
+<button id="save" onclick="canvas.toBlob(blobCallback('plotting_tool'), 'image/jpg', 1.0)">Save image</button>
+</div>
 
 {% endblock %}
