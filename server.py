@@ -318,7 +318,7 @@ def plotting_tool_search_run():
             print(str(item.mafid) + "," + item.formula + "," + item.molecule.stechiometry + "," + str(getattr(item, form.x_axis.data)) + "," + str(getattr(item, form.y_axis.data)))
         elif axis[0] == 'stechiometry' and axis[1] != 'stechiometry':
             print(str(item.mafid) + "," + item.formula + "," + item.molecule.stechiometry + "," + str(stoichiometry_axis_values[list_items.index(item)]) + "," + str(getattr(item, form.y_axis.data)))
-        elif axis[0] == 'stechiometry' and axis[1] != 'stechiometry':
+        elif axis[0] != 'stechiometry' and axis[1] == 'stechiometry':
             print(str(item.mafid) + "," + item.formula + "," + item.molecule.stechiometry + "," + str(getattr(item, form.x_axis.data)) + "," + str(stoichiometry_axis_values[list_items.index(item)]))
         else:
             print(str(item.mafid) + "," + item.formula + "," + item.molecule.stechiometry + "," + str(stoichiometry_axis_values[list_items.index(item)]) + "," + str(stoichiometry_axis_values[list_items.index(item)]))
