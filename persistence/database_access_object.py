@@ -370,22 +370,19 @@ def query_items_by_plotting_tool_search(form):
     try:
         query = session.query(Item).join(Molecule).join(Composition)
 
-        atoms = list()
-
-        # 1 atoms used in filter in step 4
-        atoms.append(form.element1.data)
-        atoms.append(form.element2.data)
-        # this step is deferred to the function filter_items_with_regular_expression at the end of the method
-
-        # 2 species count
-        query = query.filter(Item.species_count >= 2) # Requirement established by PNC on 12th april 2019
+        # 1 species count
+        query = query.filter(Item.species_count == 2) # Requirement established by PNC on 12th april 2019
 
         # ORDER BY
-        # 3 confidential
+        # 3 confidential true
         query = query.filter(Item.confidential.is_(False)).order_by(Item.atomic_formation_enthalpy)
         # only public order by atomic formation enthallpy
 
-        # 4 step filter using regular expression with the atoms previously collected
+        # 3 step filter using regular expression with the atoms previously collected
+        atoms = list()
+        atoms.append(form.element1.data)
+        atoms.append(form.element2.data)
+
         return filter_items_with_regular_expression(query.all(), atoms)
     finally:
         session.close()

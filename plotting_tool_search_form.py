@@ -31,8 +31,8 @@ class PlottingToolSearchForm(Form):
     x_axis = SelectField('X-Axis', coerce=str, choices=list_choices, default='atom_volume')
     y_axis = SelectField('Y-Axis', coerce=str, choices=list_choices, default='atomic_formation_enthalpy') #choices=[(atom.symbol, atom.symbol) for atom in ATOMS])
 
-    element1 = SelectField('Element 1', coerce=str, choices = [ (atom.symbol, atom.symbol) for atom in ATOMS], default='Fe')
-    element2 = SelectField('Element 2', coerce=str, choices=[(atom.symbol, atom.symbol) for atom in ATOMS], default='Ta')
+    element1 = SelectField('Element 1', coerce=str, choices = [ (atom.symbol, atom.symbol) for atom in ATOMS], default='Ac')
+    element2 = SelectField('Element 2', coerce=str, choices=[(atom.symbol, atom.symbol) for atom in ATOMS], default='Ag')
 
     submit = SubmitField("Plot")
 
