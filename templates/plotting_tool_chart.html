@@ -56,7 +56,7 @@ new Chart(document.getElementById("line-chart"), {
     data: {
         datasets: [
           {% for item in items %}
-           {% if axis[0] != 'magnetocrystalline_anisotropy_constants' and axis[1] != 'magnetocrystalline_anisotropy_constants' %}
+            {% if axis[0] != 'magnetocrystalline_anisotropy_constants' and axis[1] != 'magnetocrystalline_anisotropy_constants' %}
                 {% if axis[0] != 'stechiometry' and axis[1] != 'stechiometry' %}
                     {
                     <!-- Not mag.ani.const neither stoichiometry NORMAL CASE -->
@@ -79,22 +79,36 @@ new Chart(document.getElementById("line-chart"), {
                     },
                 {% endif %}
             {% elif axis[0] == 'magnetocrystalline_anisotropy_constants' and axis[1] != 'magnetocrystalline_anisotropy_constants' %}
-            {
-            <!-- Using magnetocrystalline_anisotropy_constants in x axis-->
-            data: [{ x: {{ item[axis[0]][0] }} , y : {{ item[axis[1]] }} }]
-            },
+                {% if axis[1] == 'stechiometry' %}
+                    {
+                    <!-- Using magnetocrystalline_anisotropy_constants in x axis andd stechiometry in y axis -->
+                    data: [{ x: {{ item[axis[0]][0] }} , y : {{ stoichiometry_axis_values[items.index(item)] }} }]
+                    },
+                {% else %}
+                    {
+                    <!-- Using magnetocrystalline_anisotropy_constants in x axis and other property different of stechiometry in y axis -->
+                    data: [{ x: {{ item[axis[0]][0] }} , y : {{ item[axis[1]] }} }]
+                    },
+                {% endif %}
             {% elif axis[0] != 'magnetocrystalline_anisotropy_constants' and axis[1] == 'magnetocrystalline_anisotropy_constants' %}
-            {
-            <!-- Using magnetocrystalline_anisotropy_constants in y axis-->
-            data: [{ x: {{ item[axis[0]] }} , y : {{ item[axis[1]][0] }} }]
-            },
+                 {% if axis[0] == 'stechiometry' %}
+                    {
+                    <!-- Using stechiometry in x axis and magnetocrystalline_anisotropy_constants in y axis -->
+                    data: [{ x: {{ stoichiometry_axis_values[items.index(item)] }} , y : {{ item[axis[1]][0] }} }]
+                    },
+                {% else %}
+                    {
+                    <!-- Using magnetocrystalline_anisotropy_constants in y axis and any other property in x axis -->
+                    data: [{ x: {{ item[axis[0]] }} , y : {{ item[axis[1]][0] }} }]
+                    },
+                {% endif %}
             {% else %}
-            {
-            <!-- Using magnetocrystalline_anisotropy_constants in both x and y axis -->
-            data: [{ x: {{ item[axis[0]][0] }} , y : {{ item[axis[1]][0] }} }]
-            },
+                {
+                <!-- Using magnetocrystalline_anisotropy_constants in both x and y axis -->
+                data: [{ x: {{ item[axis[0]][0] }} , y : {{ item[axis[1]][0] }} }]
+                },
             {% endif %}
-          {% endfor %}
+       {% endfor %}
 		]
     },
     options: {
